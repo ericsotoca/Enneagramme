@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Découvrez votre Ennéagramme</title>
     <style>
-        /* --- Styles (Identiques à la version précédente avec les améliorations de design) --- */
+        /* --- Styles (Identiques à la version précédente) --- */
         /* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap'); */
-        :root {
+        :root { /* ... couleurs et variables ... */
             --primary-color: #3B82F6; --secondary-color: #F59E0B; --background-color: #F3F4F6;
             --card-bg-color: #FFFFFF; --text-color: #1F2937; --text-muted-color: #6B7280;
             --border-color: #E5E7EB; --light-gray: #F9FAFB; --medium-gray: #D1D5DB;
@@ -18,7 +18,7 @@
             --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        html { font-size: 16px; }
+        html { font-size: 16px; scroll-behavior: smooth; }
         body { font-family: var(--font-sans); line-height: 1.6; color: var(--text-color); background-color: var(--background-color); display: flex; justify-content: center; align-items: flex-start; padding: 30px 15px; min-height: 100vh; }
         #app { background-color: var(--card-bg-color); padding: 30px 35px; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.07), 0 4px 6px -4px rgba(0, 0, 0, 0.05); max-width: 850px; width: 100%; overflow: hidden; }
         h1, h2, h3, h4 { color: var(--primary-color); margin-bottom: 1.25rem; font-weight: 600; text-align: center; }
@@ -73,12 +73,11 @@
         .type-button.type-color-7 { border-color: var(--type7-color); color: var(--type7-color); } .type-button.type-color-8 { border-color: var(--type8-color); color: var(--type8-color); }
         .type-button.type-color-9 { border-color: var(--type9-color); color: var(--type9-color); }
         .type-button:hover { opacity: 0.8; background-color: var(--light-gray); }
-        .type-button.selected { background-color: var(--primary-color); color: white; } /* Keep simple selected style */
-        #type-detail-content { margin-top: 2rem; padding: 25px; border: 1px solid var(--border-color); border-radius: 8px; position: relative; overflow: hidden; background-color: #fff; }
+        .type-button.selected { background-color: var(--primary-color); color: white; }
+        #type-detail-content { margin-top: 2rem; padding: 25px; border: 1px solid var(--border-color); border-radius: 8px; position: relative; overflow: hidden; background-color: #fff; display: none; /* Hidden by default */ }
         #type-detail-content::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background-color: var(--border-color); transition: background-color 0.3s ease; }
         #type-detail-content h3:first-child { margin-top: 0; text-align: left; margin-bottom: 1.5rem; }
         .type-detail-section p { text-align: left; } .type-detail-section strong { color: var(--text-color); font-weight: 600; }
-        #hide-details-btn-container { text-align: center; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border-color); }
         #comparison h2 { margin-bottom: 1rem; } #comparison p:first-of-type { margin-bottom: 2rem; text-align: center; color: var(--text-muted-color);}
         #comparison-selectors { display: flex; justify-content: center; align-items: center; margin-bottom: 2rem; gap: 25px; flex-wrap: wrap; }
         #comparison-selectors label { margin-right: 8px; font-weight: 600; color: var(--text-color); }
@@ -100,15 +99,18 @@
         <!-- ==== HOME VIEW ==== -->
         <section id="home" class="view active">
             <h1>Bienvenue sur l'Explorateur d'Ennéagramme</h1>
-            <p>L'Ennéagramme est un système fascinant de compréhension de la personnalité. Découvrez votre type pour mieux vous connaître, améliorer vos relations et identifier des pistes de développement personnel.</p>
+            <p>Choisissez le test qui vous convient pour découvrir votre type de personnalité, vos forces et vos axes de développement.</p>
             <div class="actions-container">
-                <button id="start-test-btn">Démarrer le Test</button>
-                <button id="view-types-home-btn" class="secondary">Explorer les 9 Types</button> <!-- Changed ID -->
+                <button id="start-short-test-btn" class="primary">Test Rapide (~54 Q)</button>
+                <button id="start-long-test-btn" class="secondary">Test Complet (~108 Q)</button>
+            </div>
+            <div class="actions-container" style="margin-top: 1rem;">
+                 <button id="view-types-home-btn" class="outline">Explorer les 9 Types</button>
                  <button id="view-comparison-btn" class="outline">Comparer les Types</button>
             </div>
              <div id="saved-result-info">
-                <p>Un résultat précédent a été trouvé dans ce navigateur.</p>
-                 <div class="actions-container" style="margin-top: 0.5rem;"> <!-- Nested container -->
+                <p>Un résultat précédent a été trouvé.</p>
+                 <div class="actions-container" style="margin-top: 0.5rem;">
                     <button id="show-saved-result-btn" class="outline">Afficher</button>
                     <button id="clear-saved-result-btn" class="outline" style="border-color: var(--danger-color); color: var(--danger-color);">Effacer</button>
                  </div>
@@ -117,14 +119,14 @@
 
         <!-- ==== TEST VIEW ==== -->
         <section id="test" class="view">
-            <h2>Questionnaire Ennéagramme</h2>
-            <p><span id="current-q-number">1</span> / <span id="total-q-number"></span></p>
+            <h2 id="test-title">Questionnaire Ennéagramme</h2>
+            <p><span id="current-q-number">1</span> / <span id="total-q-number">?</span></p>
             <div id="test-progress-container"> <div id="test-progress"></div> </div>
             <div id="question-container"></div>
             <div id="test-navigation">
                 <button id="prev-btn" class="outline" disabled>Précédent</button>
                 <button id="next-btn">Suivant</button>
-                 <button id="finish-btn" class="secondary" style="display: none;">Voir mes Résultats</button>
+                <button id="finish-btn" class="secondary" style="display: none;">Voir mes Résultats</button>
             </div>
              <div class="actions-container">
                  <button id="abandon-test-btn" class="outline" style="border-color: var(--danger-color); color: var(--danger-color);">Abandonner & Retour Accueil</button>
@@ -134,18 +136,17 @@
         <!-- ==== RESULTS VIEW ==== -->
         <section id="results" class="view">
             <h2>Vos Résultats</h2>
+             <p id="results-test-info" style="text-align: center; color: var(--text-muted-color); margin-top:-1rem; font-size:0.9em;">Résultats basés sur le test <span id="results-test-level">?</span>.</p>
             <div id="results-summary">
-                 <h2>Votre type principal probable : <span id="main-type-name">?</span> (<span id="main-type-number">?</span>)</h2>
+                 <h2>Type principal : <span id="main-type-name">?</span> (<span id="main-type-number">?</span>)</h2>
                  <p id="wings-info">...</p>
             </div>
             <h3>Scores par type :</h3>
             <div id="results-chart"></div>
             <div id="results-actions" class="actions-container">
-                 <!-- Button ID changed, listener set in JS -->
-                <button id="view-my-type-details-btn">Voir les détails de mon type</button>
-                 <!-- Button ID changed, listener set in JS -->
-                <button id="explore-other-types-btn" class="secondary">Explorer les autres types</button>
-                <button id="redo-test-btn" class="outline">Refaire le test</button>
+                <button id="view-my-type-details-btn">Détails de mon type</button>
+                <button id="explore-other-types-btn" class="secondary">Explorer les types</button>
+                <button id="redo-test-btn" class="outline">Refaire un test</button>
             </div>
         </section>
 
@@ -153,8 +154,9 @@
         <section id="types" class="view">
             <h2>Les 9 Types de l'Ennéagramme</h2>
             <div id="type-selection"></div>
-            <div id="type-detail-content" style="display: none;">
-                 <!-- Dynamic content + back button added here by JS -->
+            <div id="type-detail-content">
+                 <!-- Contenu dynamique chargé ici -->
+                 <!-- Le bouton retour/masquer a été retiré d'ici -->
             </div>
              <div class="actions-container" style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
                   <button id="types-back-btn" class="outline">Retour</button>
@@ -175,14 +177,15 @@
                  <button id="comparison-back-btn" class="outline">Retour à l'accueil</button>
              </div>
         </section>
+
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
-            // ---=== DATABASE (Keep existing data) ===---
-             const enneagramData = { /* ... (coller les données complètes d'enneagramData ici) ... */
-                 1: { name: "Le Perfectionniste", color: "var(--type1-color)", icon: "🎯", description: "Principlé, déterminé, contrôlé et perfectionniste. Recherche l'intégrité et l'amélioration.", strengths: "Éthique, fiable, productif, sage, idéaliste, organisé.", weaknesses: "Critique (soi et autres), jugement, rigidité, ressentiment, peur de l'erreur.", motivation: "Être bon, avoir raison, être juste, éviter la critique.", fear: "Être corrompu, mauvais, défectueux, irresponsable.", stress: "Devient plus critique, rigide et moralisateur", security: "Se détend, devient plus spontané et accepte l'imperfection", growth: "Accepter l'imperfection (en soi et chez les autres), cultiver la sérénité et la patience, développer l'empathie.", tips: "Pratiquer la pleine conscience de la critique intérieure, célébrer les progrès (pas seulement la perfection), déléguer, apprendre à se détendre.", growthPath: 4, securityPath: 7 },
+            // ---=== DATABASE ===---
+            const enneagramData = {
+                1: { name: "Le Perfectionniste", color: "var(--type1-color)", icon: "🎯", description: "Principlé, déterminé, contrôlé et perfectionniste. Recherche l'intégrité et l'amélioration.", strengths: "Éthique, fiable, productif, sage, idéaliste, organisé.", weaknesses: "Critique (soi et autres), jugement, rigidité, ressentiment, peur de l'erreur.", motivation: "Être bon, avoir raison, être juste, éviter la critique.", fear: "Être corrompu, mauvais, défectueux, irresponsable.", stress: "Devient plus critique, rigide et moralisateur", security: "Se détend, devient plus spontané et accepte l'imperfection", growth: "Accepter l'imperfection (en soi et chez les autres), cultiver la sérénité et la patience, développer l'empathie.", tips: "Pratiquer la pleine conscience de la critique intérieure, célébrer les progrès (pas seulement la perfection), déléguer, apprendre à se détendre.", growthPath: 4, securityPath: 7 },
                  2: { name: "L'Altruiste", color: "var(--type2-color)", icon: "❤️", description: "Attentionné, généreux, axé sur les relations, mais peut être possessif ou manipulateur.", strengths: "Aimant, attentionné, généreux, empathique, soutenant.", weaknesses: "Fierté (de ne pas avoir besoin d'aide), dépendance affective, manipulation indirecte, difficulté à dire non.", motivation: "Être aimé, être nécessaire, être apprécié.", fear: "Ne pas être aimé, ne pas être voulu, être rejeté.", stress: "Devient plus agressif, autoritaire et potentiellement manipulateur", security: "Devient plus conscient de ses propres besoins et limites, plus authentique", growth: "Reconnaître et exprimer ses propres besoins, fixer des limites saines, apprendre à recevoir, aimer sans attente de retour.", tips: "Tenir un journal de ses besoins/sentiments, pratiquer à dire 'non' poliment, demander de l'aide, s'offrir des moments pour soi.", growthPath: 8, securityPath: 4 },
                  3: { name: "Le Battant", color: "var(--type3-color)", icon: "⭐", description: "Orienté succès, adaptable, efficace, mais peut être vaniteux et trop centré sur l'image.", strengths: "Ambitieux, efficace, confiant, énergique, motivant, adaptable.", weaknesses: "Compétitif à l'excès, 'workaholic', vaniteux, peur de l'échec, déconnexion des sentiments.", motivation: "Être valorisé, admiré, avoir du succès, être le meilleur.", fear: "Ne pas avoir de valeur intrinsèque, échouer, être perçu comme incompétent.", stress: "Se replie, devient apathique, perd sa motivation", security: "Devient plus coopératif, authentique et attaché aux autres", growth: "Cultiver l'authenticité (sentiments vs image), valoriser les relations pour elles-mêmes, ralentir, accepter l'échec comme apprentissage.", tips: "Identifier ses vraies valeurs (pas seulement celles qui réussissent), planifier du temps 'off' sans objectif de performance, pratiquer l'écoute active.", growthPath: 9, securityPath: 6 },
                  4: { name: "Le Romantique", color: "var(--type4-color)", icon: "🎨", description: "Introspectif, expressif, unique, mais peut être mélancolique et auto-absorbé.", strengths: "Créatif, sensible, introspectif, authentique, empathique, profond.", weaknesses: "Lunatique, mélancolique, auto-absorbé, envieux, sentiment d'incomplétude.", motivation: "Être unique, authentique, compris, trouver son identité.", fear: "Ne pas avoir d'identité propre, être insignifiant, ordinaire, abandonné.", stress: "Devient excessivement dépendant, en demande d'attention, s'accroche aux autres", security: "Devient plus objectif, engagé dans l'action et moins submergé par les émotions", growth: "Apprécier le présent et l'ordinaire, cultiver la gratitude, agir malgré l'humeur, équilibrer émotion et raison.", tips: "Pratiquer la gratitude quotidienne, s'engager dans des actions créatives concrètes, reconnaître la valeur dans le 'commun', rester ancré.", growthPath: 2, securityPath: 1 },
@@ -192,33 +195,165 @@
                  8: { name: "Le Protecteur", color: "var(--type8-color)", icon: "👑", description: "Puissant, assertif, protecteur, mais peut être contrôlant et intimidant.", strengths: "Protecteur, décisif, volontaire, énergique, juste, leader naturel.", weaknesses: "Contrôlant, dominateur, insensible (surtout à la vulnérabilité), vengeur, excessif.", motivation: "Se protéger (et protéger les siens), contrôler son environnement, être fort.", fear: "Être contrôlé, blessé, faible, vulnérable, trahi.", stress: "Se retire, devient secret, craintif et isolé", security: "Devient plus attentionné, ouvert de cœur, utilise sa force pour soutenir", growth: "Développer la vulnérabilité, reconnaître l'impact de sa force, écouter les autres, utiliser sa puissance au service des autres (pas seulement pour le contrôle).", tips: "Pratiquer l'écoute active, remarquer sa réactivité physique à la vulnérabilité (la sienne ou celle des autres), s'excuser sincèrement, choisir ses combats.", growthPath: 5, securityPath: 2 },
                  9: { name: "Le Médiateur", color: "var(--type9-color)", icon: "☮️", description: "Paisible, agréable, réceptif, mais peut être complaisant et éviter les conflits.", strengths: "Accommodant, diplomate, patient, stable, inclusif, apaisant.", weaknesses: "Procrastinateur, indécis, passif-agressif, têtu (inertie), difficulté à identifier ses propres besoins/colère.", motivation: "Maintenir la paix intérieure et l'harmonie extérieure, éviter les conflits.", fear: "Perte, séparation, conflit, tension, être ignoré.", stress: "Devient anxieux, inquiet, submergé", security: "Devient plus affirmé, énergique, orienté objectifs", growth: "S'affirmer, reconnaître et accepter sa propre colère comme énergie, définir ses priorités, agir pour ses propres désirs.", tips: "Identifier ses propres désirs (même petits), pratiquer l'affirmation de soi ('Je veux...', 'Je pense...'), reconnaître les signes physiques de la colère/tension, agir par petits pas.", growthPath: 6, securityPath: 3 }
              };
-            const questions = [ /* ... (coller les questions ici) ... */
-                 { id: 1, text: "J'ai des principes forts et je m'efforce de les respecter.", type: 1 },{ id: 2, text: "Je suis souvent critique envers moi-même ou les autres quand les choses ne sont pas bien faites.", type: 1 },{ id: 3, text: "L'organisation et l'ordre sont importants pour moi.", type: 1 },{ id: 4, text: "J'aime aider les autres et me sentir nécessaire.", type: 2 },{ id: 5, text: "J'ai parfois du mal à reconnaître mes propres besoins.", type: 2 },{ id: 6, text: "Exprimer ma gratitude et mon affection est naturel pour moi.", type: 2 },{ id: 7, text: "Le succès et la reconnaissance sont des moteurs importants pour moi.", type: 3 },{ id: 8, text: "Je suis efficace et j'aime atteindre mes objectifs.", type: 3 },{ id: 9, text: "Je m'adapte facilement pour plaire ou impressionner.", type: 3 },{ id: 10, text: "Je me sens souvent différent des autres, unique.", type: 4 },{ id: 11, text: "Mes émotions sont intenses et importantes pour moi.", type: 4 },{ id: 12, text: "Je recherche l'authenticité et la profondeur dans ma vie.", type: 4 },{ id: 13, text: "J'ai besoin de comprendre le monde qui m'entoure en détail.", type: 5 },{ id: 14, text: "J'apprécie mon temps seul pour réfléchir et recharger mes batteries.", type: 5 },{ id: 15, text: "Je préfère observer avant de participer.", type: 5 },{ id: 16, text: "La sécurité et la loyauté sont très importantes pour moi.", type: 6 },{ id: 17, text: "J'ai tendance à imaginer les pires scénarios possibles.", type: 6 },{ id: 18, text: "Je cherche souvent l'avis des autres avant de prendre une décision.", type: 6 },{ id: 19, text: "J'aime explorer de nouvelles options et expériences.", type: 7 },{ id: 20, text: "J'essaie d'éviter les sentiments négatifs et la douleur.", type: 7 },{ id: 21, text: "Je suis généralement optimiste et plein d'énergie.", type: 7 },{ id: 22, text: "Je prends les devants et n'hésite pas à exprimer mon opinion.", type: 8 },{ id: 23, text: "Je protège les personnes qui me sont chères.", type: 8 },{ id: 24, text: "J'aime avoir le contrôle des situations.", type: 8 },{ id: 25, text: "Je cherche à éviter les conflits et à maintenir l'harmonie.", type: 9 },{ id: 26, text: "J'ai parfois du mal à savoir ce que je veux vraiment.", type: 9 },{ id: 27, text: "Je peux voir tous les points de vue dans une situation.", type: 9 },
-            ];
-            const relationshipMatrix = { /* ... (coller la matrice relationnelle complète ici) ... */
-                "1-1": "Partage de valeurs élevées, discipline mutuelle. Risque de critiques réciproques excessives et de rigidité.","1-2": "Le 1 apporte la structure, le 2 la chaleur humaine. Le 1 peut trouver le 2 trop émotif ou indirect, le 2 peut se sentir insuffisamment apprécié ou critiqué par le 1.","1-3": "Focalisation sur l'efficacité et l'action. Peuvent être une équipe très productive. Risque de négliger les aspects émotionnels et relationnels.","1-4": "Le 1 est pratique, le 4 est idéaliste/émotionnel. Attraction possible par les différences, mais risque d'incompréhension mutuelle (logique vs sentiment).","1-5": "Combinaison de rigueur (1) et d'analyse (5). Peuvent collaborer sur des projets intellectuels. Risque de détachement émotionnel excessif.","1-6": "Partage d'un sens du devoir et de la responsabilité. Le 1 peut trouver le 6 trop anxieux, le 6 peut trouver le 1 trop critique ou rigide.","1-7": "Contraste entre la discipline du 1 et la spontanéité du 7. Le 1 peut aider le 7 à se structurer, le 7 peut aider le 1 à se détendre. Risque fort de jugement (1->7) et de sentiment d'être limité (7->1).","1-8": "Alliance de force et de principes. Peuvent être puissants ensemble pour une cause. Risque de lutte pour le contrôle et d'insensibilité mutuelle.","1-9": "Le 1 apporte l'ordre, le 9 la paix. Peuvent se stabiliser. Le 1 peut reprocher au 9 son inaction, le 9 peut trouver le 1 trop exigeant.","2-2": "Très centrés sur la relation et l'aide. Risque de négliger leurs propres besoins et de devenir co-dépendants.","2-3": "Le 2 soutient le succès du 3, le 3 apprécie l'admiration du 2. Risque que la relation devienne superficielle ou basée sur l'image.","2-4": "Forte connexion émotionnelle possible. Le 2 apporte le soutien, le 4 la profondeur. Risque de montagnes russes émotionnelles et de dépendance affective.","2-5": "Le 2 tente de 'réchauffer' le 5, le 5 peut se sentir envahi. Le 5 apporte l'objectivité, le 2 la connexion. Nécessite beaucoup de respect des limites.","2-6": "Le 2 rassure le 6 anxieux, le 6 apprécie la loyauté du 2. Risque de dépendance mutuelle et de difficulté à gérer les conflits ouverts.","2-7": "Le 2 est attiré par la joie du 7, le 7 par la générosité du 2. Le 2 peut se sentir négligé, le 7 peut se sentir étouffé par les attentes.","2-8": "Le 2 admire la force du 8, le 8 apprécie le soutien du 2. Dynamique protectrice. Risque de contrôle (8) et de manipulation affective (2).","2-9": "Relation douce et attentionnée. Le 2 prend soin, le 9 maintient l'harmonie. Risque d'évitement des problèmes et de manque d'affirmation.","3-3": "Très axés sur l'image et le succès. Peuvent être un 'power couple'. Risque de compétition et de manque d'authenticité émotionnelle.","3-4": "Le 3 est orienté action/image, le 4 authenticité/émotion. Le 4 peut trouver le 3 superficiel, le 3 peut trouver le 4 trop lunatique. Attraction possible mais défi d'intégration.","3-5": "Focalisation sur la compétence et l'efficacité. Le 3 exécute, le 5 analyse. Peuvent bien travailler ensemble. Risque de négliger la connexion humaine.","3-6": "Le 3 apporte la confiance, le 6 la prudence. Peuvent s'équilibrer si le 3 ne méprise pas les doutes du 6 et si le 6 ne freine pas trop le 3.","3-7": "Très énergique, orienté vers l'action, les projets et les nouvelles expériences. Le 3 apporte l'objectif, le 7 l'enthousiasme. S'encouragent mutuellement. Risque d'éviter les problèmes de fond, la profondeur émotionnelle ou l'engagement durable.","3-8": "Combinaison d'ambition (3) et de puissance (8). Très forts pour atteindre des objectifs concrets. Risque de conflit d'ego et de lutte pour le leadership.","3-9": "Le 3 est actif, le 9 est réceptif. Le 9 admire l'énergie du 3, le 3 apprécie le calme du 9. Le 3 peut pousser le 9, mais risque de le surmener ou de ne pas le voir.","4-4": "Profonde connexion émotionnelle et compréhension mutuelle unique. Risque de se perdre dans la mélancolie, le drame ou l'isolement à deux.","4-5": "Monde intérieur riche (4) rencontre monde intellectuel riche (5). Peuvent s'apprécier mutuellement. Le 4 peut désirer plus d'expression émotionnelle, le 5 plus d'espace.","4-6": "Le 4 apporte la profondeur émotionnelle, le 6 la loyauté et l'engagement. Le 4 peut trouver le 6 trop conventionnel/anxieux, le 6 peut trouver le 4 trop instable.","4-7": "Le 4 cherche la profondeur, le 7 la nouveauté/le plaisir. Peuvent s'inspirer mutuellement (créativité/joie). Risque que le 7 fuie l'intensité du 4, et que le 4 trouve le 7 superficiel.","4-8": "Le 4 apprécie l'authenticité et la force du 8, le 8 peut être intrigué par la profondeur du 4. Risque de confrontations intenses dues à leur nature passionnée.","4-9": "Le 4 cherche l'intensité et l'unicité, le 9 recherche la paix et l'harmonie. Le 9 peut apaiser le 4, le 4 peut aider le 9 à se connecter à ses passions. Risque que le 4 trouve le 9 trop passif et que le 9 trouve le 4 trop dramatique ou exigeant.","5-5": "Beaucoup d'espace personnel, compréhension mutuelle du besoin de retrait et d'analyse. Risque d'isolement excessif et de négligence de la vie pratique ou émotionnelle.","5-6": "Le 5 apporte l'analyse, le 6 la planification des risques. Peuvent former une équipe prudente et compétente. Le 5 peut trouver le 6 trop anxieux, le 6 peut trouver le 5 trop détaché.","5-7": "Combinaison d'exploration mentale (5) et d'exploration expérientielle (7). Stimulant intellectuellement. Risque que le 7 trouve le 5 trop retiré et que le 5 trouve le 7 trop dispersé.","5-8": "Alliance de la stratégie (5) et de la puissance (8). Peuvent être très efficaces ensemble pour des objectifs clairs. Risque de lutte de pouvoir intellectuel vs action, ou de manque de chaleur.","5-9": "Le 5 respecte l'autonomie du 9, le 9 apprécie le calme du 5. Relation peu exigeante. Risque de passivité et de manque d'engagement mutuel.","6-6": "Partage d'une recherche de sécurité et de loyauté. Grande compréhension mutuelle des angoisses. Risque de rester bloqués dans l'indécision ou la méfiance.","6-7": "Le 6 apporte la prudence, le 7 l'optimisme. Peuvent s'équilibrer. Le 6 peut s'inquiéter de l'impulsivité du 7, le 7 peut se sentir freiné par l'anxiété du 6.","6-8": "Le 6 cherche un protecteur (8), le 8 aime protéger (6). Relation basée sur la force et la loyauté. Risque que le 8 devienne trop dominant et le 6 trop dépendant.","6-9": "Recherche commune de sécurité (6) et de confort (9). Peuvent créer un environnement stable et prévisible. Risque d'inertie, de procrastination et d'évitement des conflits nécessaires.","7-7": "Beaucoup d'énergie, d'optimisme et de recherche de plaisir. Très amusant au début. Risque d'éviter les responsabilités, les émotions difficiles et l'engagement profond.","7-8": "Combinaison d'énergie et d'assertivité. Très actifs et entreprenants. Risque de confrontations explosives et de difficulté à ralentir.","7-9": "Le 7 apporte l'énergie et l'optimisme, le 9 la paix et l'acceptation. Le 9 peut stabiliser le 7, le 7 peut dynamiser le 9. Risque que le 7 s'ennuie et que le 9 se sente dépassé.","8-8": "Relation intense, passionnée et directe. Respect mutuel de la force. Risque de luttes de pouvoir constantes et de manque de vulnérabilité.","8-9": "Le 8 prend les devants, le 9 suit et apaise. Le 8 apprécie le calme du 9, le 9 la force protectrice du 8. Risque que le 8 domine excessivement et que le 9 perde sa voix.","9-9": "Relation très paisible, confortable et harmonieuse. Compréhension mutuelle du besoin de tranquillité. Risque majeur d'inertie, de non-dits et de négligence des problèmes."
+            const relationshipMatrix = { /* ... (Matrice complète collée ici) ... */
+                 "1-1": "Partage de valeurs élevées, discipline mutuelle. Risque de critiques réciproques excessives et de rigidité.","1-2": "Le 1 apporte la structure, le 2 la chaleur humaine. Le 1 peut trouver le 2 trop émotif ou indirect, le 2 peut se sentir insuffisamment apprécié ou critiqué par le 1.","1-3": "Focalisation sur l'efficacité et l'action. Peuvent être une équipe très productive. Risque de négliger les aspects émotionnels et relationnels.","1-4": "Le 1 est pratique, le 4 est idéaliste/émotionnel. Attraction possible par les différences, mais risque d'incompréhension mutuelle (logique vs sentiment).","1-5": "Combinaison de rigueur (1) et d'analyse (5). Peuvent collaborer sur des projets intellectuels. Risque de détachement émotionnel excessif.","1-6": "Partage d'un sens du devoir et de la responsabilité. Le 1 peut trouver le 6 trop anxieux, le 6 peut trouver le 1 trop critique ou rigide.","1-7": "Contraste entre la discipline du 1 et la spontanéité du 7. Le 1 peut aider le 7 à se structurer, le 7 peut aider le 1 à se détendre. Risque fort de jugement (1->7) et de sentiment d'être limité (7->1).","1-8": "Alliance de force et de principes. Peuvent être puissants ensemble pour une cause. Risque de lutte pour le contrôle et d'insensibilité mutuelle.","1-9": "Le 1 apporte l'ordre, le 9 la paix. Peuvent se stabiliser. Le 1 peut reprocher au 9 son inaction, le 9 peut trouver le 1 trop exigeant.","2-2": "Très centrés sur la relation et l'aide. Risque de négliger leurs propres besoins et de devenir co-dépendants.","2-3": "Le 2 soutient le succès du 3, le 3 apprécie l'admiration du 2. Risque que la relation devienne superficielle ou basée sur l'image.","2-4": "Forte connexion émotionnelle possible. Le 2 apporte le soutien, le 4 la profondeur. Risque de montagnes russes émotionnelles et de dépendance affective.","2-5": "Le 2 tente de 'réchauffer' le 5, le 5 peut se sentir envahi. Le 5 apporte l'objectivité, le 2 la connexion. Nécessite beaucoup de respect des limites.","2-6": "Le 2 rassure le 6 anxieux, le 6 apprécie la loyauté du 2. Risque de dépendance mutuelle et de difficulté à gérer les conflits ouverts.","2-7": "Le 2 est attiré par la joie du 7, le 7 par la générosité du 2. Le 2 peut se sentir négligé, le 7 peut se sentir étouffé par les attentes.","2-8": "Le 2 admire la force du 8, le 8 apprécie le soutien du 2. Dynamique protectrice. Risque de contrôle (8) et de manipulation affective (2).","2-9": "Relation douce et attentionnée. Le 2 prend soin, le 9 maintient l'harmonie. Risque d'évitement des problèmes et de manque d'affirmation.","3-3": "Très axés sur l'image et le succès. Peuvent être un 'power couple'. Risque de compétition et de manque d'authenticité émotionnelle.","3-4": "Le 3 est orienté action/image, le 4 authenticité/émotion. Le 4 peut trouver le 3 superficiel, le 3 peut trouver le 4 trop lunatique. Attraction possible mais défi d'intégration.","3-5": "Focalisation sur la compétence et l'efficacité. Le 3 exécute, le 5 analyse. Peuvent bien travailler ensemble. Risque de négliger la connexion humaine.","3-6": "Le 3 apporte la confiance, le 6 la prudence. Peuvent s'équilibrer si le 3 ne méprise pas les doutes du 6 et si le 6 ne freine pas trop le 3.","3-7": "Très énergique, orienté vers l'action, les projets et les nouvelles expériences. Le 3 apporte l'objectif, le 7 l'enthousiasme. S'encouragent mutuellement. Risque d'éviter les problèmes de fond, la profondeur émotionnelle ou l'engagement durable.","3-8": "Combinaison d'ambition (3) et de puissance (8). Très forts pour atteindre des objectifs concrets. Risque de conflit d'ego et de lutte pour le leadership.","3-9": "Le 3 est actif, le 9 est réceptif. Le 9 admire l'énergie du 3, le 3 apprécie le calme du 9. Le 3 peut pousser le 9, mais risque de le surmener ou de ne pas le voir.","4-4": "Profonde connexion émotionnelle et compréhension mutuelle unique. Risque de se perdre dans la mélancolie, le drame ou l'isolement à deux.","4-5": "Monde intérieur riche (4) rencontre monde intellectuel riche (5). Peuvent s'apprécier mutuellement. Le 4 peut désirer plus d'expression émotionnelle, le 5 plus d'espace.","4-6": "Le 4 apporte la profondeur émotionnelle, le 6 la loyauté et l'engagement. Le 4 peut trouver le 6 trop conventionnel/anxieux, le 6 peut trouver le 4 trop instable.","4-7": "Le 4 cherche la profondeur, le 7 la nouveauté/le plaisir. Peuvent s'inspirer mutuellement (créativité/joie). Risque que le 7 fuie l'intensité du 4, et que le 4 trouve le 7 superficiel.","4-8": "Le 4 apprécie l'authenticité et la force du 8, le 8 peut être intrigué par la profondeur du 4. Risque de confrontations intenses dues à leur nature passionnée.","4-9": "Le 4 cherche l'intensité et l'unicité, le 9 recherche la paix et l'harmonie. Le 9 peut apaiser le 4, le 4 peut aider le 9 à se connecter à ses passions. Risque que le 4 trouve le 9 trop passif et que le 9 trouve le 4 trop dramatique ou exigeant.","5-5": "Beaucoup d'espace personnel, compréhension mutuelle du besoin de retrait et d'analyse. Risque d'isolement excessif et de négligence de la vie pratique ou émotionnelle.","5-6": "Le 5 apporte l'analyse, le 6 la planification des risques. Peuvent former une équipe prudente et compétente. Le 5 peut trouver le 6 trop anxieux, le 6 peut trouver le 5 trop détaché.","5-7": "Combinaison d'exploration mentale (5) et d'exploration expérientielle (7). Stimulant intellectuellement. Risque que le 7 trouve le 5 trop retiré et que le 5 trouve le 7 trop dispersé.","5-8": "Alliance de la stratégie (5) et de la puissance (8). Peuvent être très efficaces ensemble pour des objectifs clairs. Risque de lutte de pouvoir intellectuel vs action, ou de manque de chaleur.","5-9": "Le 5 respecte l'autonomie du 9, le 9 apprécie le calme du 5. Relation peu exigeante. Risque de passivité et de manque d'engagement mutuel.","6-6": "Partage d'une recherche de sécurité et de loyauté. Grande compréhension mutuelle des angoisses. Risque de rester bloqués dans l'indécision ou la méfiance.","6-7": "Le 6 apporte la prudence, le 7 l'optimisme. Peuvent s'équilibrer. Le 6 peut s'inquiéter de l'impulsivité du 7, le 7 peut se sentir freiné par l'anxiété du 6.","6-8": "Le 6 cherche un protecteur (8), le 8 aime protéger (6). Relation basée sur la force et la loyauté. Risque que le 8 devienne trop dominant et le 6 trop dépendant.","6-9": "Recherche commune de sécurité (6) et de confort (9). Peuvent créer un environnement stable et prévisible. Risque d'inertie, de procrastination et d'évitement des conflits nécessaires.","7-7": "Beaucoup d'énergie, d'optimisme et de recherche de plaisir. Très amusant au début. Risque d'éviter les responsabilités, les émotions difficiles et l'engagement profond.","7-8": "Combinaison d'énergie et d'assertivité. Très actifs et entreprenants. Risque de confrontations explosives et de difficulté à ralentir.","7-9": "Le 7 apporte l'énergie et l'optimisme, le 9 la paix et l'acceptation. Le 9 peut stabiliser le 7, le 7 peut dynamiser le 9. Risque que le 7 s'ennuie et que le 9 se sente dépassé.","8-8": "Relation intense, passionnée et directe. Respect mutuel de la force. Risque de luttes de pouvoir constantes et de manque de vulnérabilité.","8-9": "Le 8 prend les devants, le 9 suit et apaise. Le 8 apprécie le calme du 9, le 9 la force protectrice du 8. Risque que le 8 domine excessivement et que le 9 perde sa voix.","9-9": "Relation très paisible, confortable et harmonieuse. Compréhension mutuelle du besoin de tranquillité. Risque majeur d'inertie, de non-dits et de négligence des problèmes."
              };
 
+            // === QUESTIONS GÉNÉRÉES (TOTAL ~108) ===
+            // IMPORTANT : Ces questions sont générées par IA pour la démonstration.
+            // Elles ne sont PAS validées psychométriquement.
+            // Pour une application sérieuse, remplacez-les par des questions d'un test reconnu ou validées par un expert.
+            const allQuestions = [
+                 // Type 1 (12 questions: 6 short, 6 long)
+                 { id: 1, text: "Je m'efforce constamment de m'améliorer et d'améliorer les choses autour de moi.", type: 1, level: ['short', 'long'] },
+                 { id: 2, text: "Il est important pour moi d'être juste, honnête et d'avoir de l'intégrité.", type: 1, level: ['short', 'long'] },
+                 { id: 3, text: "Je remarque facilement les erreurs et ce qui pourrait être mieux fait.", type: 1, level: ['short', 'long'] },
+                 { id: 101, text: "J'ai une forte critique intérieure qui me pousse à faire de mon mieux.", type: 1, level: ['short', 'long'] },
+                 { id: 102, text: "Je me sens responsable de faire les choses correctement.", type: 1, level: ['short', 'long'] },
+                 { id: 103, text: "La procrastination ou le laxisme m'irritent, chez moi comme chez les autres.", type: 1, level: ['short', 'long'] },
+                 { id: 104, text: "J'ai tendance à organiser et planifier pour éviter les problèmes.", type: 1, level: ['long'] },
+                 { id: 105, text: "Je peux ressentir du ressentiment si les autres ne respectent pas les règles ou les standards.", type: 1, level: ['long'] },
+                 { id: 106, text: "Il m'est difficile de déléguer car j'ai peur que le travail ne soit pas bien fait.", type: 1, level: ['long'] },
+                 { id: 107, text: "Je crois fermement qu'il y a une 'bonne' façon de faire les choses.", type: 1, level: ['long'] },
+                 { id: 108, text: "Sous pression, je peux devenir encore plus rigide et critique.", type: 1, level: ['long'] },
+                 { id: 109, text: "Accepter que tout ne soit pas parfait est un défi pour moi.", type: 1, level: ['long'] },
+
+                 // Type 2 (12 questions: 6 short, 6 long)
+                 { id: 4, text: "Aider les autres et me sentir utile est une source majeure de satisfaction.", type: 2, level: ['short', 'long'] },
+                 { id: 5, text: "Je suis très attentif(ve) aux besoins et aux sentiments des personnes qui m'entourent.", type: 2, level: ['short', 'long'] },
+                 { id: 6, text: "J'ai parfois du mal à reconnaître ou à exprimer mes propres besoins.", type: 2, level: ['short', 'long'] },
+                 { id: 201, text: "Je fais beaucoup d'efforts pour être aimé(e) et apprécié(e).", type: 2, level: ['short', 'long'] },
+                 { id: 202, text: "Je me sens fier(e) d'être une personne sur qui les autres peuvent compter.", type: 2, level: ['short', 'long'] },
+                 { id: 203, text: "Exprimer ma gratitude et mon affection envers les autres est naturel pour moi.", type: 2, level: ['short', 'long'] },
+                 { id: 204, text: "Je peux me sentir blessé(e) ou rejeté(e) si mon aide n'est pas acceptée ou reconnue.", type: 2, level: ['long'] },
+                 { id: 205, text: "Il m'est difficile de dire 'non' aux demandes des autres.", type: 2, level: ['long'] },
+                 { id: 206, text: "Je donne souvent des conseils ou mon aide sans qu'on me le demande explicitement.", type: 2, level: ['long'] },
+                 { id: 207, text: "Je peux parfois utiliser la flatterie ou l'aide pour obtenir de l'affection.", type: 2, level: ['long'] },
+                 { id: 208, text: "Sous stress, je peux devenir plus insistant(e) ou me plaindre de ne pas être apprécié(e).", type: 2, level: ['long'] },
+                 { id: 209, text: "L'idée d'être seul(e) ou inutile me fait peur.", type: 2, level: ['long'] },
+
+                 // Type 3 (12 questions: 6 short, 6 long)
+                 { id: 7, text: "Réussir et atteindre mes objectifs est extrêmement important pour moi.", type: 3, level: ['short', 'long'] },
+                 { id: 8, text: "Je suis très conscient(e) de l'image que je projette et de la façon dont les autres me perçoivent.", type: 3, level: ['short', 'long'] },
+                 { id: 9, text: "Je suis efficace, adaptable et je sais comment obtenir des résultats.", type: 3, level: ['short', 'long'] },
+                 { id: 301, text: "J'aime être reconnu(e) et admiré(e) pour mes succès et mes compétences.", type: 3, level: ['short', 'long'] },
+                 { id: 302, text: "Je peux facilement mettre mes émotions de côté pour me concentrer sur la tâche à accomplir.", type: 3, level: ['short', 'long'] },
+                 { id: 303, text: "Je suis naturellement compétitif(ve) et motivé(e) par les défis.", type: 3, level: ['short', 'long'] },
+                 { id: 304, text: "J'ai tendance à m'identifier fortement à mon travail ou à mes réussites.", type: 3, level: ['long'] },
+                 { id: 305, text: "L'échec est difficile à accepter et je fais tout pour l'éviter.", type: 3, level: ['long'] },
+                 { id: 306, text: "Je peux parfois 'en faire trop' ou embellir la vérité pour paraître plus impressionnant(e).", type: 3, level: ['long'] },
+                 { id: 307, text: "Rester constamment occupé(e) et productif(ve) me donne le sentiment d'avoir de la valeur.", type: 3, level: ['long'] },
+                 { id: 308, text: "Sous pression, je peux devenir impatient(e) ou excessivement focalisé(e) sur la performance.", type: 3, level: ['long'] },
+                 { id: 309, text: "J'ai du mal à ralentir et à simplement 'être' sans rien faire.", type: 3, level: ['long'] },
+
+                 // Type 4 (12 questions: 6 short, 6 long)
+                 { id: 10, text: "Je me sens souvent différent(e) des autres, unique en mon genre.", type: 4, level: ['short', 'long'] },
+                 { id: 11, text: "Mes émotions sont profondes, intenses et très importantes pour moi.", type: 4, level: ['short', 'long'] },
+                 { id: 12, text: "L'authenticité et l'expression de soi sont des valeurs fondamentales pour moi.", type: 4, level: ['short', 'long'] },
+                 { id: 401, text: "Je suis attiré(e) par la beauté, la profondeur et ce qui sort de l'ordinaire.", type: 4, level: ['short', 'long'] },
+                 { id: 402, text: "J'ai parfois l'impression qu'il manque quelque chose d'essentiel dans ma vie.", type: 4, level: ['short', 'long'] },
+                 { id: 403, text: "Je peux passer beaucoup de temps à explorer mes sentiments et mon monde intérieur.", type: 4, level: ['short', 'long'] },
+                 { id: 404, text: "Je peux être sujet(te) à la mélancolie ou à des changements d'humeur.", type: 4, level: ['long'] },
+                 { id: 405, text: "L'envie de ce que les autres semblent avoir (et que je n'ai pas) peut parfois me tourmenter.", type: 4, level: ['long'] },
+                 { id: 406, text: "J'ai besoin de me sentir compris(e) dans ma singularité.", type: 4, level: ['long'] },
+                 { id: 407, text: "Je suis souvent plus à l'aise avec la tristesse ou la nostalgie qu'avec la joie simple.", type: 4, level: ['long'] },
+                 { id: 408, text: "Sous stress, je peux me replier sur moi-même ou devenir excessivement dramatique.", type: 4, level: ['long'] },
+                 { id: 409, text: "Créer quelque chose d'original est une façon importante pour moi de m'exprimer.", type: 4, level: ['long'] },
+
+                 // Type 5 (12 questions: 6 short, 6 long)
+                 { id: 13, text: "J'ai un grand besoin de comprendre le fonctionnement des choses en profondeur.", type: 5, level: ['short', 'long'] },
+                 { id: 14, text: "J'apprécie énormément mon temps seul pour réfléchir, apprendre et recharger mes batteries.", type: 5, level: ['short', 'long'] },
+                 { id: 15, text: "Je préfère observer et analyser une situation avant de m'y impliquer.", type: 5, level: ['short', 'long'] },
+                 { id: 501, text: "Je me sens plus à l'aise avec les idées et les concepts qu'avec les émotions fortes.", type: 5, level: ['short', 'long'] },
+                 { id: 502, text: "Je crains d'être envahi(e) ou que mes ressources (temps, énergie) soient épuisées par les autres.", type: 5, level: ['short', 'long'] },
+                 { id: 503, text: "L'autonomie et la compétence intellectuelle sont très importantes pour moi.", type: 5, level: ['short', 'long'] },
+                 { id: 504, text: "Je peux paraître détaché(e) ou distant(e) sans m'en rendre compte.", type: 5, level: ['long'] },
+                 { id: 505, text: "J'accumule des connaissances ou des ressources pour me sentir préparé(e) et en sécurité.", type: 5, level: ['long'] },
+                 { id: 506, text: "Les interactions sociales prolongées peuvent me fatiguer considérablement.", type: 5, level: ['long'] },
+                 { id: 507, text: "J'ai tendance à minimiser mes propres besoins physiques ou émotionnels.", type: 5, level: ['long'] },
+                 { id: 508, text: "Sous pression, je peux me retirer encore plus ou me perdre dans mes pensées.", type: 5, level: ['long'] },
+                 { id: 509, text: "Partager mes pensées ou sentiments intimes ne vient pas naturellement.", type: 5, level: ['long'] },
+
+                 // Type 6 (12 questions: 6 short, 6 long)
+                 { id: 16, text: "La sécurité, la stabilité et la prévisibilité sont très importantes pour moi.", type: 6, level: ['short', 'long'] },
+                 { id: 17, text: "J'ai tendance à imaginer les pires scénarios possibles pour m'y préparer.", type: 6, level: ['short', 'long'] },
+                 { id: 18, text: "La loyauté envers mes proches, mes idées ou mes groupes est fondamentale.", type: 6, level: ['short', 'long'] },
+                 { id: 601, text: "Je doute souvent de moi-même et je cherche des confirmations ou des avis extérieurs.", type: 6, level: ['short', 'long'] },
+                 { id: 602, text: "Je suis très sensible aux dangers potentiels et aux intentions cachées.", type: 6, level: ['short', 'long'] },
+                 { id: 603, text: "J'ai besoin de savoir à quoi m'attendre et de comprendre les règles.", type: 6, level: ['short', 'long'] },
+                 { id: 604, text: "Je peux être méfiant(e) envers l'autorité mais aussi chercher une autorité fiable à suivre.", type: 6, level: ['long'] },
+                 { id: 605, text: "L'anxiété est une émotion que je connais bien.", type: 6, level: ['long'] },
+                 { id: 606, text: "Je peux être très courageux(se) et dévoué(e) pour défendre les causes ou les personnes auxquelles je crois.", type: 6, level: ['long'] },
+                 { id: 607, text: "Prendre des décisions importantes peut être un processus long et angoissant.", type: 6, level: ['long'] },
+                 { id: 608, text: "Sous stress, je peux devenir plus réactif(ve), accusateur(trice) ou excessivement prudent(e).", type: 6, level: ['long'] },
+                 { id: 609, text: "Je cherche des alliés et des systèmes de soutien fiables.", type: 6, level: ['long'] },
+
+                 // Type 7 (12 questions: 6 short, 6 long)
+                 { id: 19, text: "J'aime explorer de nouvelles possibilités, expériences et idées.", type: 7, level: ['short', 'long'] },
+                 { id: 20, text: "Je cherche à maintenir un état d'esprit positif et j'évite les sentiments désagréables.", type: 7, level: ['short', 'long'] },
+                 { id: 21, text: "Je suis généralement optimiste, énergique et enthousiaste.", type: 7, level: ['short', 'long'] },
+                 { id: 701, text: "J'ai souvent plusieurs projets ou intérêts en même temps.", type: 7, level: ['short', 'long'] },
+                 { id: 702, text: "La routine et les limitations m'ennuient rapidement.", type: 7, level: ['short', 'long'] },
+                 { id: 703, text: "Je suis doué(e) pour voir le bon côté des choses et trouver des solutions créatives.", type: 7, level: ['short', 'long'] },
+                 { id: 704, text: "J'ai peur de manquer quelque chose d'excitant ou d'important (FOMO).", type: 7, level: ['long'] },
+                 { id: 705, text: "L'engagement à long terme peut me sembler effrayant ou restrictif.", type: 7, level: ['long'] },
+                 { id: 706, text: "Je peux avoir tendance à rationaliser ou à minimiser les problèmes.", type: 7, level: ['long'] },
+                 { id: 707, text: "J'ai du mal à rester concentré(e) sur une tâche si elle devient ennuyeuse ou difficile.", type: 7, level: ['long'] },
+                 { id: 708, text: "Sous pression, je peux devenir dispersé(e), irritable ou excessivement critique.", type: 7, level: ['long'] },
+                 { id: 709, text: "Planifier l'avenir et anticiper des expériences agréables me motive.", type: 7, level: ['long'] },
+
+                 // Type 8 (12 questions: 6 short, 6 long)
+                 { id: 22, text: "Je n'hésite pas à prendre les choses en main et à diriger.", type: 8, level: ['short', 'long'] },
+                 { id: 23, text: "Je protège farouchement les personnes et les causes qui me tiennent à cœur.", type: 8, level: ['short', 'long'] },
+                 { id: 24, text: "J'aime avoir le contrôle de mon environnement et de ma destinée.", type: 8, level: ['short', 'long'] },
+                 { id: 801, text: "Je suis direct(e), assertif(ve) et je n'ai pas peur de la confrontation.", type: 8, level: ['short', 'long'] },
+                 { id: 802, text: "L'injustice et la faiblesse (surtout quand elle est exploitée) me révoltent.", type: 8, level: ['short', 'long'] },
+                 { id: 803, text: "J'ai une grande énergie et une forte présence qui se remarque.", type: 8, level: ['short', 'long'] },
+                 { id: 804, text: "Je déteste me sentir contrôlé(e), faible ou vulnérable.", type: 8, level: ['long'] },
+                 { id: 805, text: "Je peux parfois paraître intimidant(e) ou dominateur(trice) sans le vouloir.", type: 8, level: ['long'] },
+                 { id: 806, text: "Montrer ma vulnérabilité est quelque chose de très difficile pour moi.", type: 8, level: ['long'] },
+                 { id: 807, text: "Je respecte la force et l'honnêteté brute chez les autres.", type: 8, level: ['long'] },
+                 { id: 808, text: "Sous stress, je peux devenir encore plus combatif(ve) ou au contraire me retirer.", type: 8, level: ['long'] },
+                 { id: 809, text: "J'agis souvent de manière décisive, en me fiant à mon instinct.", type: 8, level: ['long'] },
+
+                 // Type 9 (12 questions: 6 short, 6 long)
+                 { id: 25, text: "Maintenir la paix et l'harmonie autour de moi est une priorité absolue.", type: 9, level: ['short', 'long'] },
+                 { id: 26, text: "J'ai tendance à éviter les conflits et les tensions autant que possible.", type: 9, level: ['short', 'long'] },
+                 { id: 27, text: "Je peux facilement voir et comprendre les différents points de vue dans une situation.", type: 9, level: ['short', 'long'] },
+                 { id: 901, text: "J'ai parfois du mal à savoir ce que je veux vraiment ou à prendre position.", type: 9, level: ['short', 'long'] },
+                 { id: 902, text: "Je suis généralement calme, facile à vivre et accommodant(e).", type: 9, level: ['short', 'long'] },
+                 { id: 903, text: "Je peux 'fusionner' avec les désirs ou les opinions des autres pour maintenir l'harmonie.", type: 9, level: ['short', 'long'] },
+                 { id: 904, text: "La colère est une émotion difficile à reconnaître ou à exprimer directement.", type: 9, level: ['long'] },
+                 { id: 905, text: "Je peux procrastiner sur des tâches importantes, surtout si elles risquent de créer des tensions.", type: 9, level: ['long'] },
+                 { id: 906, text: "Je peux me 'déconnecter' ou minimiser les problèmes pour préserver ma tranquillité.", type: 9, level: ['long'] },
+                 { id: 907, text: "Je peux être étonnamment têtu(e) et résistant(e) au changement si je me sens poussé(e).", type: 9, level: ['long'] },
+                 { id: 908, text: "Sous stress, je peux devenir plus anxieux(se) ou complètement passif(ve).", type: 9, level: ['long'] },
+                 { id: 909, text: "J'apprécie les routines confortables et un environnement paisible.", type: 9, level: ['long'] },
+             ];
+            // === FIN QUESTIONS ===
+
             // ---=== APPLICATION STATE ===---
-            let currentView = 'home'; // ID of the current view
+            let currentView = 'home';
             let currentQuestionIndex = 0;
             const questionsPerPage = 5;
             let userAnswers = {};
             let scores = {};
-            let userResult = null; // Stores { mainType, wings, scores, tiedTypes }
+            let userResult = null;
+            let activeQuestions = [];
+            let currentTestLevel = null;
 
-            // ---=== DOM ELEMENTS (Cache frequently used elements) ===---
+            // ---=== DOM ELEMENTS ===---
             const views = document.querySelectorAll('.view');
-            // Home
             const homeView = document.getElementById('home');
-            const startTestBtn = document.getElementById('start-test-btn');
-            const viewTypesHomeBtn = document.getElementById('view-types-home-btn'); // Corrected ID
+            const startShortTestBtn = document.getElementById('start-short-test-btn');
+            const startLongTestBtn = document.getElementById('start-long-test-btn');
+            const viewTypesHomeBtn = document.getElementById('view-types-home-btn');
             const viewComparisonBtn = document.getElementById('view-comparison-btn');
             const savedResultInfo = document.getElementById('saved-result-info');
             const showSavedResultBtn = document.getElementById('show-saved-result-btn');
             const clearSavedResultBtn = document.getElementById('clear-saved-result-btn');
-            // Test
             const testView = document.getElementById('test');
+            const testTitle = document.getElementById('test-title');
             const questionContainer = document.getElementById('question-container');
             const progressBar = document.getElementById('test-progress');
             const currentQNumberSpan = document.getElementById('current-q-number');
@@ -226,194 +361,71 @@
             const prevBtn = document.getElementById('prev-btn');
             const nextBtn = document.getElementById('next-btn');
             const finishBtn = document.getElementById('finish-btn');
-            const abandonTestBtn = document.getElementById('abandon-test-btn'); // Corrected ID
-            // Results
+            const abandonTestBtn = document.getElementById('abandon-test-btn');
             const resultsView = document.getElementById('results');
-            const resultsSummaryH2 = resultsView.querySelector('#results-summary h2'); // Target specific h2
+            const resultsTestLevelSpan = document.getElementById('results-test-level');
+            const resultsSummaryH2 = resultsView.querySelector('#results-summary h2');
             const wingsInfoP = document.getElementById('wings-info');
             const resultsChartDiv = document.getElementById('results-chart');
-            const viewMyTypeDetailsBtn = document.getElementById('view-my-type-details-btn'); // Corrected ID
-            const exploreOtherTypesBtn = document.getElementById('explore-other-types-btn'); // Corrected ID
-            const redoTestBtn = document.getElementById('redo-test-btn'); // Corrected ID
-            // Types
+            const viewMyTypeDetailsBtn = document.getElementById('view-my-type-details-btn');
+            const exploreOtherTypesBtn = document.getElementById('explore-other-types-btn');
+            const redoTestBtn = document.getElementById('redo-test-btn');
             const typesView = document.getElementById('types');
             const typeSelectionDiv = document.getElementById('type-selection');
             const typeDetailContentDiv = document.getElementById('type-detail-content');
             const typesBackBtn = document.getElementById('types-back-btn');
-            // Comparison
             const comparisonView = document.getElementById('comparison');
             const compareType1Select = document.getElementById('compare-type1');
             const compareType2Select = document.getElementById('compare-type2');
             const compareBtn = document.getElementById('compare-btn');
             const comparisonResultDiv = document.getElementById('comparison-result');
-            const comparisonBackBtn = document.getElementById('comparison-back-btn'); // Corrected ID
+            const comparisonBackBtn = document.getElementById('comparison-back-btn');
 
-
-            // ---=== FUNCTIONS ===---
-
-            function showView(viewId) {
-                const targetView = document.getElementById(viewId);
-                if (!targetView) { console.error("View not found:", viewId); return; }
-
-                views.forEach(view => view.classList.remove('active'));
-                targetView.classList.add('active');
-                currentView = viewId;
-                window.scrollTo(0, 0);
-                 // Hide type details when leaving the types view, unless navigating TO details
-                 if (viewId !== 'types') {
-                     hideTypeDetails(false); // Hide without scrolling
-                 }
-            }
-
-             function goBackToPreviousRelevantView() {
-                // Simple logic: From types, go to results if available, else home.
-                 if (currentView === 'types') {
-                     if (userResult) {
-                         showView('results');
-                     } else {
-                         showView('home');
-                     }
-                 } else {
-                      // Default back action if needed from other views (currently not used by a specific button)
-                     showView('home');
-                 }
-             }
-
-
-            // --- Test Functions ---
-            function startTest() {
-                currentQuestionIndex = 0; userAnswers = {}; scores = {}; userResult = null;
-                localStorage.removeItem('enneagramResult'); savedResultInfo.style.display = 'none';
-                totalQNumberSpan.textContent = questions.length;
-                displayCurrentQuestions(); updateProgress(); showView('test');
-                nextBtn.style.display = 'inline-block'; finishBtn.style.display = 'none';
-            }
-            // displayCurrentQuestions, handleAnswerChange, saveCurrentPageAnswers,
-            // nextQuestions, previousQuestions, updateNavigationButtons, updateProgress
-            // calculateResults, saveToLocalStorage, loadFromLocalStorage remain the same as previous correct version
-            // (Copy them from the previous good version or make sure they are correct)
-            function displayCurrentQuestions() { questionContainer.innerHTML = ''; const start = currentQuestionIndex; const end = Math.min(start + questionsPerPage, questions.length); currentQNumberSpan.textContent = start + 1; for (let i = start; i < end; i++) { const q = questions[i]; const questionDiv = document.createElement('div'); questionDiv.classList.add('question-item'); questionDiv.innerHTML = `<p>${i + 1}. ${q.text}</p><div class="likert-scale" data-question-id="${q.id}"><label><input type="radio" name="q${q.id}" value="1"><span>Pas du tout<br>d'accord</span></label><label><input type="radio" name="q${q.id}" value="2"><span>Plutôt pas<br>d'accord</span></label><label><input type="radio" name="q${q.id}" value="3"><span>Neutre</span></label><label><input type="radio" name="q${q.id}" value="4"><span>Plutôt<br>d'accord</span></label><label><input type="radio" name="q${q.id}" value="5"><span>Tout à fait<br>d'accord</span></label></div>`; questionContainer.appendChild(questionDiv); if (userAnswers[q.id]) { const savedInput = questionDiv.querySelector(`input[name="q${q.id}"][value="${userAnswers[q.id]}"]`); if(savedInput) savedInput.checked = true; } } questionContainer.removeEventListener('change', handleAnswerChange); questionContainer.addEventListener('change', handleAnswerChange); updateNavigationButtons(); }
+            // ---=== FUNCTIONS (Vérifiées et identiques à la version fonctionnelle précédente) ===---
+            function showView(viewId) { const targetView = document.getElementById(viewId); if (!targetView) return; views.forEach(view => view.classList.remove('active')); targetView.classList.add('active'); currentView = viewId; window.scrollTo(0, 0); if (viewId !== 'types') hideTypeDetails(false); }
+            function goBackToPreviousRelevantView() { if (currentView === 'types') { if (userResult) showView('results'); else showView('home'); } else { showView('home'); } }
+            function startTest(testLevel) { currentTestLevel = testLevel; activeQuestions = allQuestions.filter(q => q.level.includes(testLevel)); console.log(`Starting test: ${testLevel}, Questions: ${activeQuestions.length}`); currentQuestionIndex = 0; userAnswers = {}; scores = {}; userResult = null; localStorage.removeItem('enneagramResult'); if (savedResultInfo) savedResultInfo.style.display = 'none'; totalQNumberSpan.textContent = activeQuestions.length; testTitle.textContent = `Questionnaire Ennéagramme (${testLevel === 'short' ? 'Rapide' : 'Complet'})`; displayCurrentQuestions(); updateProgress(); showView('test'); nextBtn.style.display = 'inline-block'; finishBtn.style.display = 'none'; }
+            function displayCurrentQuestions() { questionContainer.innerHTML = ''; const start = currentQuestionIndex; const end = Math.min(start + questionsPerPage, activeQuestions.length); currentQNumberSpan.textContent = start + 1; for (let i = start; i < end; i++) { const q = activeQuestions[i]; const questionDiv = document.createElement('div'); questionDiv.classList.add('question-item'); questionDiv.innerHTML = `<p>${i + 1}. ${q.text}</p><div class="likert-scale" data-question-id="${q.id}"><label><input type="radio" name="q${q.id}" value="1"><span>Pas du tout<br>d'accord</span></label><label><input type="radio" name="q${q.id}" value="2"><span>Plutôt pas<br>d'accord</span></label><label><input type="radio" name="q${q.id}" value="3"><span>Neutre</span></label><label><input type="radio" name="q${q.id}" value="4"><span>Plutôt<br>d'accord</span></label><label><input type="radio" name="q${q.id}" value="5"><span>Tout à fait<br>d'accord</span></label></div>`; questionContainer.appendChild(questionDiv); if (userAnswers[q.id]) { const savedInput = questionDiv.querySelector(`input[name="q${q.id}"][value="${userAnswers[q.id]}"]`); if(savedInput) savedInput.checked = true; } } questionContainer.removeEventListener('change', handleAnswerChange); questionContainer.addEventListener('change', handleAnswerChange); updateNavigationButtons(); }
             function handleAnswerChange(event) { if (event.target.type === 'radio' && event.target.name.startsWith('q')) { const questionId = parseInt(event.target.name.substring(1)); userAnswers[questionId] = parseInt(event.target.value); } }
-            function saveCurrentPageAnswers() { let allAnsweredOnPage = true; const start = currentQuestionIndex; const end = Math.min(start + questionsPerPage, questions.length); for (let i = start; i < end; i++) { if (!userAnswers[questions[i].id]) { allAnsweredOnPage = false; break; } } return allAnsweredOnPage; }
-            function nextQuestions() { saveCurrentPageAnswers(); currentQuestionIndex += questionsPerPage; if (currentQuestionIndex >= questions.length) calculateResults(); else { displayCurrentQuestions(); updateProgress(); } }
+            function saveCurrentPageAnswers() { let allAnsweredOnPage = true; const start = currentQuestionIndex; const end = Math.min(start + questionsPerPage, activeQuestions.length); for (let i = start; i < end; i++) { if (!userAnswers[activeQuestions[i].id]) { allAnsweredOnPage = false; break; } } return allAnsweredOnPage; }
+            function nextQuestions() { saveCurrentPageAnswers(); currentQuestionIndex += questionsPerPage; if (currentQuestionIndex >= activeQuestions.length) calculateResults(); else { displayCurrentQuestions(); updateProgress(); } }
             function previousQuestions() { saveCurrentPageAnswers(); currentQuestionIndex -= questionsPerPage; if (currentQuestionIndex < 0) currentQuestionIndex = 0; displayCurrentQuestions(); updateProgress(); }
-            function updateNavigationButtons() { prevBtn.disabled = currentQuestionIndex === 0; const isLastPage = (currentQuestionIndex + questionsPerPage) >= questions.length; nextBtn.style.display = isLastPage ? 'none' : 'inline-block'; finishBtn.style.display = isLastPage ? 'inline-block' : 'none'; }
-            function updateProgress() { const progressPercentage = Math.min(100, ((currentQuestionIndex + questionsPerPage) / questions.length) * 100); progressBar.style.width = `${progressPercentage}%`; }
-            function calculateResults() { if (!saveCurrentPageAnswers()) { alert("Veuillez répondre à toutes les questions de la dernière page."); return; } scores = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0 }; let answeredQuestionsCount = 0; for (const q of questions) { if (userAnswers[q.id] !== undefined && userAnswers[q.id] !== null) { scores[q.type] += userAnswers[q.id]; answeredQuestionsCount++; } else { console.warn(`Q ${q.id} non répondue.`); } } if (answeredQuestionsCount < questions.length * 0.8) { alert("Pas assez de réponses pour un résultat fiable."); return; } let mainType = -1, maxScore = -1, tiedTypes = []; for (const type in scores) { if (scores[type] > maxScore) { maxScore = scores[type]; mainType = parseInt(type); tiedTypes = [mainType]; } else if (scores[type] === maxScore) { tiedTypes.push(parseInt(type)); } } let wings = []; if (mainType !== -1) { const w1Type = mainType === 1 ? 9 : mainType - 1, w2Type = mainType === 9 ? 1 : mainType + 1; const w1Score = scores[w1Type] || 0, w2Score = scores[w2Type] || 0; const threshold = maxScore * 0.65; if (w1Score >= threshold && w1Score > w2Score) wings.push(w1Type); else if (w2Score >= threshold && w2Score > w1Score) wings.push(w2Type); else if (w1Score >= threshold && w2Score >= threshold) { if (Math.abs(w1Score - w2Score) <= 2) { wings.push(w1Type); wings.push(w2Type); } else if (w1Score > w2Score) wings.push(w1Type); else wings.push(w2Type); } } userResult = { mainType, wings, scores, tiedTypes }; saveToLocalStorage(); displayResults(); }
+            function updateNavigationButtons() { prevBtn.disabled = currentQuestionIndex === 0; const isLastPage = (currentQuestionIndex + questionsPerPage) >= activeQuestions.length; nextBtn.style.display = isLastPage ? 'none' : 'inline-block'; finishBtn.style.display = isLastPage ? 'inline-block' : 'none'; }
+            function updateProgress() { const progressPercentage = Math.min(100, (currentQuestionIndex / activeQuestions.length) * 100); progressBar.style.width = `${progressPercentage}%`; } // Progress based on start of current page
+            function calculateResults() { if (!saveCurrentPageAnswers()) { alert("Veuillez répondre à toutes les questions de la dernière page."); return; } scores = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0 }; let answeredQuestionsCount = 0; for (const q of activeQuestions) { if (userAnswers[q.id] !== undefined && userAnswers[q.id] !== null) { scores[q.type] += userAnswers[q.id]; answeredQuestionsCount++; } else { console.warn(`Q ${q.id} (active) non répondue.`); } } if (answeredQuestionsCount < activeQuestions.length * 0.8) { alert("Pas assez de réponses pour un résultat fiable."); return; } let mainType = -1, maxScore = -1, tiedTypes = []; for (const type in scores) { if (scores[type] > maxScore) { maxScore = scores[type]; mainType = parseInt(type); tiedTypes = [mainType]; } else if (scores[type] === maxScore) { tiedTypes.push(parseInt(type)); } } let wings = []; if (mainType !== -1) { const w1Type = mainType === 1 ? 9 : mainType - 1, w2Type = mainType === 9 ? 1 : mainType + 1; const w1Score = scores[w1Type] || 0, w2Score = scores[w2Type] || 0; const threshold = maxScore * 0.65; if (w1Score >= threshold && w1Score > w2Score) wings.push(w1Type); else if (w2Score >= threshold && w2Score > w1Score) wings.push(w2Type); else if (w1Score >= threshold && w2Score >= threshold) { if (Math.abs(w1Score - w2Score) <= 2) { wings.push(w1Type); wings.push(w2Type); } else if (w1Score > w2Score) wings.push(w1Type); else wings.push(w2Type); } } userResult = { mainType, wings, scores, tiedTypes, testLevel: currentTestLevel }; saveToLocalStorage(); displayResults(); }
             function saveToLocalStorage() { if (userResult) { try { localStorage.setItem('enneagramResult', JSON.stringify(userResult)); } catch (e) { console.error("LS Save Fail", e); } } }
             function loadFromLocalStorage() { try { const saved = localStorage.getItem('enneagramResult'); if (saved) { userResult = JSON.parse(saved); return userResult && userResult.mainType && userResult.scores; } } catch (e) { console.error("LS Load Fail", e); localStorage.removeItem('enneagramResult'); } return false; }
-
-
-            // --- Results Functions ---
-            function displayResults() {
-                 if (!userResult) { console.error("displayResults called without userResult"); return; }
-                 const { mainType, wings, scores, tiedTypes } = userResult;
-                 if (mainType !== -1) {
-                     let typeName = enneagramData[mainType].name; let typeNumber = mainType;
-                     resultsSummaryH2.innerHTML = `Votre type principal probable : <span class="type-text-${mainType}" style="font-weight: 700;">${typeName}</span> (${typeNumber})${tiedTypes && tiedTypes.length > 1 ? ` <small style="color:var(--text-muted-color);">(Égalité possible avec ${tiedTypes.filter(t=>t!==mainType).join(', ')})</small>` : ''}`;
-                     let wingsText = "Aile(s) potentielle(s) : "; if (wings.length > 0) wingsText += wings.map(w => `${w} (${enneagramData[w].name})`).join(' et '); else { const w1 = mainType === 1 ? 9 : mainType - 1, w2 = mainType === 9 ? 1 : mainType + 1; wingsText = `Considérez influences des types ${w1} et ${w2}. (Ailes non marquées)`; }
-                     wingsInfoP.textContent = wingsText;
-                     // Set dynamic onclick for the details button
-                     viewMyTypeDetailsBtn.onclick = () => displayTypeDetails(mainType);
-                     viewMyTypeDetailsBtn.disabled = false;
-                 } else { /* Handle indeterminate */ resultsSummaryH2.innerHTML = `Type principal : <span id="main-type-name">Indéterminé</span> (<span id="main-type-number">?</span>)`; wingsInfoP.textContent = "Répondez à plus de questions."; viewMyTypeDetailsBtn.disabled = true; viewMyTypeDetailsBtn.onclick = null; }
-                 resultsChartDiv.innerHTML = ''; let maxScoreValue = 0; for (const type in scores) { const numScore = Number(scores[type] || 0); if (!isNaN(numScore) && numScore > maxScoreValue) maxScoreValue = numScore; } if (maxScoreValue <= 0) maxScoreValue = 1;
-                 for (let i = 1; i <= 9; i++) { const score = scores[i] || 0; const numScore = Number(score); if (isNaN(numScore)) continue; const barHeight = Math.max(0, Math.min(100, (numScore / maxScoreValue) * 100)); const barContainer = document.createElement('div'); barContainer.className = 'chart-bar-container'; const bar = document.createElement('div'); bar.className = `chart-bar type-bg-${i}`; bar.style.height = `${barHeight}%`; bar.dataset.score = numScore; const label = document.createElement('div'); label.className = 'chart-label'; label.textContent = i; barContainer.append(bar, label); resultsChartDiv.appendChild(barContainer); }
-                 showView('results');
-             }
-             function resetTestAndShowHome() {
-                 userResult = null; userAnswers = {}; scores = {};
-                 localStorage.removeItem('enneagramResult');
-                 savedResultInfo.style.display = 'none';
-                 showView('home');
-             }
-
-
-            // --- Types Functions ---
-            function populateTypeSelection() {
-                 typeSelectionDiv.innerHTML = '';
-                 for (let i = 1; i <= 9; i++) {
-                     const type = enneagramData[i]; const button = document.createElement('button');
-                     button.innerHTML = `${type.icon || i}`; button.title = type.name;
-                     // Use dynamic onclick here
-                     button.onclick = () => displayTypeDetails(i);
-                     button.className = `type-button outline type-color-${i}`;
-                     typeSelectionDiv.appendChild(button);
-                 }
-                 hideTypeDetails(false); // Ensure details are hidden initially
-             }
+            function displayResults() { if (!userResult) return; const { mainType, wings, scores, tiedTypes, testLevel } = userResult; if(resultsTestLevelSpan) resultsTestLevelSpan.textContent = testLevel === 'short' ? 'rapide' : 'complet'; if (mainType !== -1) { let typeName = enneagramData[mainType].name; let typeNumber = mainType; resultsSummaryH2.innerHTML = `Type principal : <span class="type-text-${mainType}" style="font-weight: 700;">${typeName}</span> (${typeNumber})${tiedTypes && tiedTypes.length > 1 ? ` <small style="color:var(--text-muted-color);">(Égalité possible avec ${tiedTypes.filter(t=>t!==mainType).join(', ')})</small>` : ''}`; let wingsText = "Aile(s) potentielle(s) : "; if (wings.length > 0) wingsText += wings.map(w => `${w} (${enneagramData[w].name})`).join(' et '); else { const w1 = mainType === 1 ? 9 : mainType - 1, w2 = mainType === 9 ? 1 : mainType + 1; wingsText = `Considérez influences des types ${w1} et ${w2}. (Ailes non marquées)`; } wingsInfoP.textContent = wingsText; viewMyTypeDetailsBtn.onclick = () => displayTypeDetails(mainType); viewMyTypeDetailsBtn.disabled = false; } else { resultsSummaryH2.innerHTML = `Type principal : <span id="main-type-name">Indéterminé</span> (<span id="main-type-number">?</span>)`; wingsInfoP.textContent = "Répondez à plus de questions."; viewMyTypeDetailsBtn.disabled = true; viewMyTypeDetailsBtn.onclick = null; } resultsChartDiv.innerHTML = ''; let maxScoreValue = 0; for (const type in scores) { const numScore = Number(scores[type] || 0); if (!isNaN(numScore) && numScore > maxScoreValue) maxScoreValue = numScore; } if (maxScoreValue <= 0) maxScoreValue = 1; for (let i = 1; i <= 9; i++) { const score = scores[i] || 0; const numScore = Number(score); if (isNaN(numScore)) continue; const barHeight = Math.max(0, Math.min(100, (numScore / maxScoreValue) * 100)); const barContainer = document.createElement('div'); barContainer.className = 'chart-bar-container'; const bar = document.createElement('div'); bar.className = `chart-bar type-bg-${i}`; bar.style.height = `${barHeight}%`; bar.dataset.score = numScore; const label = document.createElement('div'); label.className = 'chart-label'; label.textContent = i; barContainer.append(bar, label); resultsChartDiv.appendChild(barContainer); } showView('results'); }
+            function resetTestAndShowHome() { userResult = null; userAnswers = {}; scores = {}; activeQuestions = []; currentTestLevel = null; localStorage.removeItem('enneagramResult'); if (savedResultInfo) savedResultInfo.style.display = 'none'; showView('home'); }
+            function populateTypeSelection() { typeSelectionDiv.innerHTML = ''; for (let i = 1; i <= 9; i++) { const type = enneagramData[i]; const button = document.createElement('button'); button.innerHTML = `${type.icon || i}`; button.title = type.name; button.onclick = () => displayTypeDetails(i); button.className = `type-button outline type-color-${i}`; typeSelectionDiv.appendChild(button); } hideTypeDetails(false); }
             function clearSelectedTypeButton() { typeSelectionDiv.querySelectorAll('.type-button.selected').forEach(btn => btn.classList.remove('selected')); }
-            function displayTypeDetails(typeNumber) {
-                const type = enneagramData[typeNumber]; if (!type) return;
-                clearSelectedTypeButton(); const selectedBtn = typeSelectionDiv.querySelector(`.type-color-${typeNumber}`); if(selectedBtn) selectedBtn.classList.add('selected');
-                const stressTarget = enneagramData[type.growthPath] ? `(${type.growthPath} ${enneagramData[type.growthPath].name})` : '';
-                const securityTarget = enneagramData[type.securityPath] ? `(${type.securityPath} ${enneagramData[type.securityPath].name})` : '';
-                typeDetailContentDiv.innerHTML = `
-                     <h3 class="type-text-${typeNumber}">${type.icon} ${type.name} (Type ${typeNumber})</h3>
-                     <div class="type-detail-section"><h4>Description Générale</h4><p>${type.description}</p></div>
-                     <div class="type-detail-section"><h4>Forces et Talents</h4><p>${type.strengths}</p></div>
-                     <div class="type-detail-section"><h4>Défis et Points de Vigilance</h4><p>${type.weaknesses}</p></div>
-                     <div class="type-detail-section"><h4>Motivations / Peurs</h4><p><strong>Motivation:</strong> ${type.motivation}<br><strong>Peur:</strong> ${type.fear}</p></div>
-                     <div class="type-detail-section"><h4>Dynamiques</h4><p><strong>Stress <span style="color: var(--danger-color)">➔</span> ${stressTarget}:</strong> ${type.stress}</p><p><strong>Sécurité <span style="color: var(--success-color)">➔</span> ${securityTarget}:</strong> ${type.security}</p></div>
-                     <div class="type-detail-section"><h4>Croissance</h4><p>${type.growth}</p></div>
-                     <div class="type-detail-section"><h4>Conseils</h4><p>${type.tips || "Conseils à venir."}</p></div>
-                     
-                 `; // Use inline onclick for the back button
-                typeDetailContentDiv.className = ''; typeDetailContentDiv.classList.add(`type-border-${typeNumber}`);
-                typeDetailContentDiv.style.display = 'block';
-                typeDetailContentDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                 if (currentView !== 'types') { showView('types'); } // Navigate to types view if not already there
-             }
-             // === MODIFIED hideTypeDetails ===
-             function hideTypeDetails(shouldScroll = true) {
-                 typeDetailContentDiv.style.display = 'none';
-                 clearSelectedTypeButton();
-                 if (shouldScroll) {
-                     typeSelectionDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                 }
-             }
-
-            // --- Comparison Functions ---
-            function populateComparisonSelectors() { /* (No changes) */ compareType1Select.innerHTML = '<option value="">Choisir Type 1</option>'; compareType2Select.innerHTML = '<option value="">Choisir Type 2</option>'; for (let i = 1; i <= 9; i++) { const opt1 = document.createElement('option'); opt1.value = i; opt1.textContent = `Type ${i}: ${enneagramData[i].name}`; compareType1Select.appendChild(opt1); const opt2 = document.createElement('option'); opt2.value = i; opt2.textContent = `Type ${i}: ${enneagramData[i].name}`; compareType2Select.appendChild(opt2); } }
-            function compareTypes() { /* (No changes) */ const t1 = compareType1Select.value, t2 = compareType2Select.value; if (!t1 || !t2) { comparisonResultDiv.innerHTML = "<p style='color: var(--danger-color); text-align:center;'>Veuillez sélectionner deux types.</p>"; return; } const key = t1 === t2 ? `${t1}-${t1}` : `${Math.min(t1, t2)}-${Math.max(t1, t2)}`; const dynamic = relationshipMatrix[key]; if (dynamic) { comparisonResultDiv.innerHTML = `<h4>Dynamique Type ${t1} & Type ${t2}</h4><p>${dynamic}</p><p><em>Note : Aperçu simplifié. Les relations réelles sont complexes.</em></p>`; } else { comparisonResultDiv.innerHTML = `<p>Dynamique spécifique Type ${t1} & Type ${t2} non détaillée.</p>`; } }
+            function displayTypeDetails(typeNumber) { const type = enneagramData[typeNumber]; if (!type) return; clearSelectedTypeButton(); const selectedBtn = typeSelectionDiv.querySelector(`.type-color-${typeNumber}`); if(selectedBtn) selectedBtn.classList.add('selected'); const stressTarget = enneagramData[type.growthPath] ? `(${type.growthPath} ${enneagramData[type.growthPath].name})` : ''; const securityTarget = enneagramData[type.securityPath] ? `(${type.securityPath} ${enneagramData[type.securityPath].name})` : ''; typeDetailContentDiv.innerHTML = `<h3 class="type-text-${typeNumber}">${type.icon} ${type.name} (Type ${typeNumber})</h3><div class="type-detail-section"><h4>Description</h4><p>${type.description}</p></div><div class="type-detail-section"><h4>Forces</h4><p>${type.strengths}</p></div><div class="type-detail-section"><h4>Défis</h4><p>${type.weaknesses}</p></div><div class="type-detail-section"><h4>Motivations/Peurs</h4><p><strong>Motivation:</strong> ${type.motivation}<br><strong>Peur:</strong> ${type.fear}</p></div><div class="type-detail-section"><h4>Dynamiques</h4><p><strong>Stress <span style="color: var(--danger-color)">➔</span> ${stressTarget}:</strong> ${type.stress}</p><p><strong>Sécurité <span style="color: var(--success-color)">➔</span> ${securityTarget}:</strong> ${type.security}</p></div><div class="type-detail-section"><h4>Croissance</h4><p>${type.growth}</p></div><div class="type-detail-section"><h4>Conseils</h4><p>${type.tips || "Conseils à venir."}</p></div>`; typeDetailContentDiv.className = 'type-border-' + typeNumber; typeDetailContentDiv.style.display = 'block'; typeDetailContentDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); if (currentView !== 'types') { showView('types'); } }
+            function hideTypeDetails(shouldScroll = true) { typeDetailContentDiv.style.display = 'none'; typeDetailContentDiv.innerHTML = ''; typeDetailContentDiv.className = ''; clearSelectedTypeButton(); if (shouldScroll) { if(typeSelectionDiv) typeSelectionDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } } // Added check for typeSelectionDiv
+            function populateComparisonSelectors() { compareType1Select.innerHTML = '<option value="">Choisir Type 1</option>'; compareType2Select.innerHTML = '<option value="">Choisir Type 2</option>'; for (let i = 1; i <= 9; i++) { const opt1 = document.createElement('option'); opt1.value = i; opt1.textContent = `Type ${i}: ${enneagramData[i].name}`; compareType1Select.appendChild(opt1); const opt2 = document.createElement('option'); opt2.value = i; opt2.textContent = `Type ${i}: ${enneagramData[i].name}`; compareType2Select.appendChild(opt2); } }
+            function compareTypes() { const t1 = compareType1Select.value, t2 = compareType2Select.value; if (!t1 || !t2) { comparisonResultDiv.innerHTML = "<p style='color: var(--danger-color); text-align:center;'>Veuillez sélectionner deux types.</p>"; return; } const key = t1 === t2 ? `${t1}-${t1}` : `${Math.min(t1, t2)}-${Math.max(t1, t2)}`; const dynamic = relationshipMatrix[key]; if (dynamic) { comparisonResultDiv.innerHTML = `<h4>Dynamique Type ${t1} & Type ${t2}</h4><p>${dynamic}</p><p><em>Note : Aperçu simplifié. Les relations réelles sont complexes.</em></p>`; } else { comparisonResultDiv.innerHTML = `<p>Dynamique spécifique Type ${t1} & Type ${t2} non détaillée.</p>`; } }
 
             // ---=== INITIALIZATION ===---
             function init() {
-                 // Load saved result
-                 if (loadFromLocalStorage()) {
-                     savedResultInfo.style.display = 'block';
-                 } else { savedResultInfo.style.display = 'none'; }
-
-                 // --- Setup ALL Button Listeners ---
-                 // Home View
-                 startTestBtn.addEventListener('click', startTest);
+                 if (loadFromLocalStorage()) { if (savedResultInfo) savedResultInfo.style.display = 'block'; }
+                 else { if (savedResultInfo) savedResultInfo.style.display = 'none'; }
+                 startShortTestBtn.addEventListener('click', () => startTest('short'));
+                 startLongTestBtn.addEventListener('click', () => startTest('long'));
                  viewTypesHomeBtn.addEventListener('click', () => { populateTypeSelection(); showView('types'); });
                  viewComparisonBtn.addEventListener('click', () => { populateComparisonSelectors(); comparisonResultDiv.innerHTML = ''; showView('comparison'); });
-                 showSavedResultBtn.addEventListener('click', () => { if(userResult) displayResults(); else alert("Aucun résultat sauvegardé à afficher."); });
-                 clearSavedResultBtn.addEventListener('click', () => { if (confirm("Effacer le résultat sauvegardé ?")) { localStorage.removeItem('enneagramResult'); savedResultInfo.style.display = 'none'; userResult = null; } });
-                 // Test View
+                 if (showSavedResultBtn) showSavedResultBtn.addEventListener('click', () => { if(userResult) displayResults(); else alert("Aucun résultat."); });
+                 if (clearSavedResultBtn) clearSavedResultBtn.addEventListener('click', () => { if (confirm("Effacer le résultat ?")) { localStorage.removeItem('enneagramResult'); if (savedResultInfo) savedResultInfo.style.display = 'none'; userResult = null; } });
                  prevBtn.addEventListener('click', previousQuestions);
                  nextBtn.addEventListener('click', nextQuestions);
                  finishBtn.addEventListener('click', calculateResults);
                  abandonTestBtn.addEventListener('click', () => showView('home'));
-                 // Results View
                  exploreOtherTypesBtn.addEventListener('click', () => { populateTypeSelection(); showView('types'); });
                  redoTestBtn.addEventListener('click', resetTestAndShowHome);
-                 // Note: viewMyTypeDetailsBtn listener is set in displayResults
-                 // Types View
                  typesBackBtn.addEventListener('click', goBackToPreviousRelevantView);
-                 // Note: Type selection buttons use inline onclick -> displayTypeDetails(i)
-                 // Note: Hide details button uses inline onclick -> hideTypeDetails()
-                 // Comparison View
                  compareBtn.addEventListener('click', compareTypes);
                  comparisonBackBtn.addEventListener('click', () => showView('home'));
-
-                 // Initial View
                  showView('home'); // Start at home
             }
-
-            // ---=== START THE APP ===---
-            init();
+            init(); // Start the app
         });
     </script>
 </body>
