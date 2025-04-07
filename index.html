@@ -5,28 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Découvrez votre Ennéagramme</title>
     <style>
+        /* --- Google Font (Optional - Add if internet connection available) --- */
+        /* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap'); */
+
         /* --- Reset & Base Styles --- */
         :root {
-            --primary-color: #4a90e2;
-            --secondary-color: #f5a623;
-            --background-color: #f8f9fa;
-            --text-color: #333;
-            --light-gray: #e9ecef;
-            --medium-gray: #ced4da;
-            --dark-gray: #6c757d;
-            --white: #fff;
-            --danger-color: #dc3545;
+            --primary-color: #3B82F6; /* Blue-500 */
+            --secondary-color: #F59E0B; /* Amber-500 */
+            --background-color: #F3F4F6; /* Gray-100 */
+            --card-bg-color: #FFFFFF; /* White */
+            --text-color: #1F2937; /* Gray-800 */
+            --text-muted-color: #6B7280; /* Gray-500 */
+            --border-color: #E5E7EB; /* Gray-200 */
+            --light-gray: #F9FAFB; /* Gray-50 */
+            --medium-gray: #D1D5DB; /* Gray-300 */
+            --dark-gray: #4B5563; /* Gray-600 */
+            --danger-color: #EF4444; /* Red-500 */
+            --success-color: #10B981; /* Emerald-500 */
 
-            /* Type Colors (Examples) */
-            --type1-color: #d9534f;
-            --type2-color: #f0ad4e;
-            --type3-color: #5cb85c;
-            --type4-color: #5bc0de;
-            --type5-color: #0275d8;
-            --type6-color: #292b2c; /* Dark color for type 6 */
-            --type7-color: #f7e14f;
-            --type8-color: #8d6e63; /* Brownish for type 8 */
-            --type9-color: #a1887f; /* Lighter brownish for type 9 */
+            /* Type Colors - Slightly softer palette */
+            --type1-color: #EF4444; /* Red-500 */
+            --type2-color: #F59E0B; /* Amber-500 */
+            --type3-color: #10B981; /* Emerald-500 */
+            --type4-color: #6366F1; /* Indigo-500 */
+            --type5-color: #3B82F6; /* Blue-500 */
+            --type6-color: #6B7280; /* Gray-500 */
+            --type7-color: #EC4899; /* Pink-500 */
+            --type8-color: #8B5CF6; /* Violet-500 */
+            --type9-color: #84CC16; /* Lime-500 */
+
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* Add Inter first if imported */
         }
 
         * {
@@ -35,140 +43,193 @@
             padding: 0;
         }
 
+        html {
+            font-size: 16px; /* Base font size */
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: var(--font-sans);
             line-height: 1.6;
             color: var(--text-color);
             background-color: var(--background-color);
             display: flex;
             justify-content: center;
-            padding: 20px 10px;
+            align-items: flex-start; /* Align top */
+            padding: 30px 15px;
             min-height: 100vh;
         }
 
         #app {
-            background-color: var(--white);
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            max-width: 800px;
+            background-color: var(--card-bg-color);
+            padding: 30px 35px; /* Increased padding */
+            border-radius: 12px; /* Softer radius */
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.07), 0 4px 6px -4px rgba(0, 0, 0, 0.05); /* Softer shadow */
+            max-width: 850px;
             width: 100%;
-            overflow: hidden; /* Contient les flottants ou marges */
+            overflow: hidden;
         }
 
-        h1, h2, h3 {
-            margin-bottom: 1rem;
+        h1, h2, h3, h4 {
             color: var(--primary-color);
+            margin-bottom: 1.25rem;
+            font-weight: 600; /* Medium weight */
             text-align: center;
         }
-        h3 {
-            color: var(--dark-gray);
+        h1 { font-size: 2rem; margin-bottom: 1.5rem; }
+        h2 { font-size: 1.75rem; color: var(--dark-gray); }
+        h3 { font-size: 1.5rem; color: var(--text-color); margin-top: 2rem; }
+        h4 {
+            font-size: 1.1rem;
+            color: var(--secondary-color);
             margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.3rem;
+            border-bottom: 1px solid var(--border-color);
+            text-align: left; /* Align subheadings left */
         }
-        h4 { /* Added for sub-sections */
-             color: var(--secondary-color);
-             margin-top: 1rem;
-             margin-bottom: 0.5rem;
-             padding-bottom: 0.2rem;
-             border-bottom: 1px solid var(--light-gray);
-         }
 
         p {
             margin-bottom: 1rem;
+            color: var(--text-muted-color);
+            text-align: justify; /* Justify text for cleaner look */
         }
+        #home p { text-align: center; } /* Center paragraphs on home */
 
         button {
             display: inline-block;
             background-color: var(--primary-color);
-            color: var(--white);
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+            color: var(--card-bg-color);
+            border: 1px solid transparent;
+            padding: 12px 24px; /* Larger padding */
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 1rem;
-            transition: background-color 0.2s ease;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
             margin: 5px;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
         }
 
         button:hover {
-            background-color: #357abd;
+            filter: brightness(1.1); /* Brighter on hover */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
         }
+         button:active {
+            filter: brightness(0.95);
+             transform: translateY(1px);
+         }
 
         button.secondary {
             background-color: var(--secondary-color);
         }
-        button.secondary:hover {
-            background-color: #d48f1c;
-        }
 
         button.outline {
-            background-color: transparent;
+            background-color: var(--card-bg-color);
             color: var(--primary-color);
-            border: 1px solid var(--primary-color);
+            border-color: var(--primary-color);
         }
         button.outline:hover {
             background-color: var(--light-gray);
+             filter: none; /* Override brightness filter for outline hover */
         }
 
         button:disabled {
             background-color: var(--medium-gray);
+            color: var(--dark-gray);
             cursor: not-allowed;
+            box-shadow: none;
+             filter: grayscale(50%);
         }
 
         /* --- View Management --- */
-        .view {
-            display: none; /* Hide all views by default */
-        }
+        .view { display: none; }
         .view.active {
-            display: block; /* Show the active view */
-            animation: fadeIn 0.5s ease;
+            display: block;
+            animation: fadeIn 0.4s ease-in-out;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- Home --- */
-        #home {
-            text-align: center;
+        /* --- Section Spacing --- */
+        section > *:not(:last-child) {
+            margin-bottom: 1.5rem; /* Consistent spacing */
         }
-        #home .actions {
+        .actions-container { /* Wrapper for button groups */
+            display: flex;
+            justify-content: center;
+            gap: 15px; /* Space between buttons */
+            flex-wrap: wrap;
             margin-top: 2rem;
         }
 
+
+        /* --- Home --- */
+        #home h1 + p { margin-top: -0.5rem; margin-bottom: 2rem;} /* Adjust spacing after H1 */
+        #saved-result-info {
+            margin-top: 2rem;
+            padding: 15px;
+            background-color: var(--light-gray);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9em;
+            color: var(--text-muted-color);
+            display: none; /* Initially hidden */
+            text-align: center;
+        }
+         #saved-result-info p { margin-bottom: 0.8rem; text-align: center; }
+         #saved-result-info button { margin-top: 0.5rem; }
+
+
         /* --- Test --- */
+         #test h2 { margin-bottom: 1rem; }
+         #test p:first-of-type { /* Progress text */
+             text-align: center;
+             color: var(--text-muted-color);
+             margin-bottom: 0.5rem;
+         }
         #test-progress-container {
             width: 100%;
-            background-color: var(--light-gray);
-            border-radius: 5px;
-            margin-bottom: 1.5rem;
+            background-color: var(--border-color);
+            border-radius: 99px; /* Pill shape */
+            margin-bottom: 2rem;
             overflow: hidden;
+             height: 12px; /* Slightly thicker */
         }
         #test-progress {
-            height: 10px;
+            height: 100%;
             width: 0%;
             background-color: var(--secondary-color);
             transition: width 0.3s ease;
+             border-radius: 99px;
         }
         #question-container {
-            margin-bottom: 1.5rem;
-            min-height: 200px; /* Avoid layout jumps */
+            margin-bottom: 2rem;
+            min-height: 250px;
         }
         .question-item {
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--light-gray);
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
         }
+         .question-item:last-child { border-bottom: none; }
         .question-item p {
-            font-weight: bold;
-            margin-bottom: 0.8rem;
+            font-weight: 600; /* Bold question text */
+            margin-bottom: 1rem;
+            color: var(--text-color);
+             text-align: left;
         }
         .likert-scale {
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-between;
-            gap: 5px; /* Espacement entre les boutons radio */
+            justify-content: space-around; /* Even spacing */
+            gap: 10px;
+            padding: 10px 0;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--light-gray);
         }
         .likert-scale label {
             display: flex;
@@ -176,224 +237,332 @@
             align-items: center;
             text-align: center;
             cursor: pointer;
-            font-size: 0.85rem;
-            color: var(--dark-gray);
-            padding: 5px;
-            border: 1px solid transparent; /* Pour la stabilité de la mise en page */
-            border-radius: 4px;
-            min-width: 60px; /* Assure une largeur minimale */
+            font-size: 0.8rem;
+            color: var(--text-muted-color);
+            padding: 8px 5px;
+            border-radius: 6px;
+            min-width: 70px;
+             transition: background-color 0.2s ease;
         }
         .likert-scale input[type="radio"] {
-            margin-bottom: 5px;
-            accent-color: var(--primary-color); /* Style la couleur du bouton radio sélectionné */
+             margin-bottom: 6px;
+             accent-color: var(--primary-color);
+             transform: scale(1.1); /* Slightly larger radio */
         }
+         .likert-scale label:hover {
+             background-color: #e9ecef; /* Subtle hover on label */
+         }
         .likert-scale input[type="radio"]:checked + span {
-             font-weight: bold;
+             font-weight: 600;
              color: var(--primary-color);
         }
-        /* Styles pour mobile */
-        @media (max-width: 600px) {
-            .likert-scale {
-                justify-content: center; /* Centre les options sur petit écran */
-            }
-             .likert-scale label {
-                min-width: 50px;
-                 font-size: 0.8rem;
-             }
-        }
-
 
         #test-navigation {
             display: flex;
             justify-content: space-between;
-            margin-top: 1rem;
+            align-items: center; /* Vertically align buttons */
+            margin-top: 2rem;
+             padding-top: 1rem;
+             border-top: 1px solid var(--border-color);
+        }
+        #test .actions-container { /* For the abandon button */
+             margin-top: 1rem;
+             justify-content: center;
         }
 
+
         /* --- Results --- */
+        #results h2 { margin-bottom: 1rem; }
         #results-summary {
             text-align: center;
-            margin-bottom: 2rem;
-            padding: 15px;
+            margin-bottom: 2.5rem;
+            padding: 20px;
             background-color: var(--light-gray);
-            border-radius: 5px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
         }
          #results-summary h2 {
-             margin-bottom: 0.5rem;
+             margin-bottom: 0.75rem;
+             font-size: 1.5rem;
+             color: var(--text-color); /* Less emphasis than main titles */
          }
+         #results-summary h2 span { font-weight: 700; } /* Bold type name/number */
+         #results-summary p { /* Wings info */
+             color: var(--text-muted-color);
+             font-size: 0.95rem;
+             margin-bottom: 0;
+         }
+          #results h3 { /* Scores by type */
+              font-size: 1.3rem;
+              color: var(--text-color);
+              margin-bottom: 1rem;
+          }
         #results-chart {
             display: flex;
             justify-content: space-around;
-            align-items: flex-end; /* Align bars at the bottom */
-            height: 200px;
-            border-bottom: 1px solid var(--medium-gray);
+            align-items: flex-end;
+            height: 220px; /* Increased height */
+            border-bottom: 2px solid var(--medium-gray); /* Thicker base line */
             padding-bottom: 10px;
-            margin-bottom: 2rem;
-            position: relative; /* Needed for absolute positioning inside if any */
+            margin-bottom: 2.5rem; /* More space after chart */
+            position: relative;
         }
         .chart-bar-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 8%; /* Adjusted for 9 bars + espacement */
+            width: 9%; /* Width for bars */
             text-align: center;
-            height: 100%; /* Container takes full height */
-            justify-content: flex-end; /* Aligns bar and label to bottom */
+            height: 100%;
+            justify-content: flex-end;
         }
         .chart-bar {
             width: 100%;
-            /* background-color: var(--primary-color); Default color, overridden by specific type */
-            transition: height 0.5s ease-out;
-            border-radius: 3px 3px 0 0;
-            position: relative; /* Pour le tooltip */
-            margin-bottom: 5px; /* Space between bar and label */
+            transition: height 0.6s cubic-bezier(0.25, 1, 0.5, 1); /* Smoother transition */
+            border-radius: 5px 5px 0 0; /* Rounded top */
+            position: relative;
+            margin-bottom: 8px; /* Space for label */
         }
-        .chart-bar::after { /* Tooltip pour score */
+        .chart-bar::after { /* Tooltip */
             content: attr(data-score);
             position: absolute;
-            top: -22px; /* Adjusted position */
+            top: -25px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.7); /* Darker tooltip */
-            color: white;
-            padding: 3px 6px;
-            border-radius: 3px;
-            font-size: 0.75rem;
+            background: rgba(31, 41, 55, 0.85); /* Gray-800 with transparency */
+            color: var(--card-bg-color);
+            padding: 4px 8px; /* More padding */
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
             white-space: nowrap;
             opacity: 0;
-            visibility: hidden; /* Hide completely when not hovered */
+            visibility: hidden;
             transition: opacity 0.2s, visibility 0.2s;
             z-index: 10;
         }
-        .chart-bar:hover::after {
-            opacity: 1;
-            visibility: visible; /* Show on hover */
-        }
-
+        .chart-bar:hover::after { opacity: 1; visibility: visible; }
         .chart-label {
-            /* margin-top: 5px; Removed, handled by container */
-            font-size: 0.85rem; /* Slightly larger label */
+            font-size: 0.9rem;
             color: var(--dark-gray);
+            font-weight: 600;
         }
         #results-actions {
-            text-align: center;
-            margin-top: 1.5rem;
-        }
+             display: flex;
+             justify-content: center;
+             gap: 15px;
+             flex-wrap: wrap;
+             margin-top: 2rem;
+         }
 
         /* --- Types --- */
+        #types h2 { margin-bottom: 2rem; }
         #type-selection {
-            text-align: center;
-            margin-bottom: 2rem;
-            display: flex; /* Pour utiliser gap */
-            flex-wrap: wrap; /* Permet aux boutons de passer à la ligne */
-            justify-content: center; /* Centre les boutons */
-            gap: 10px; /* Espace entre les boutons */
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
         }
         .type-button {
-            padding: 8px 12px;
-            min-width: 40px; /* Pour une apparence carrée/ronde */
+            padding: 10px; /* Square buttons */
+            min-width: 50px;
+            height: 50px;
+            font-size: 1.2rem; /* Larger icon/number */
+            font-weight: 700;
+             line-height: 1; /* Center text vertically */
+             display: flex;
+             align-items: center;
+             justify-content: center;
         }
+        /* Color outline based on type */
+        .type-button.type-color-1 { border-color: var(--type1-color); color: var(--type1-color); }
+        .type-button.type-color-2 { border-color: var(--type2-color); color: var(--type2-color); }
+        .type-button.type-color-3 { border-color: var(--type3-color); color: var(--type3-color); }
+        .type-button.type-color-4 { border-color: var(--type4-color); color: var(--type4-color); }
+        .type-button.type-color-5 { border-color: var(--type5-color); color: var(--type5-color); }
+        .type-button.type-color-6 { border-color: var(--type6-color); color: var(--type6-color); }
+        .type-button.type-color-7 { border-color: var(--type7-color); color: var(--type7-color); }
+        .type-button.type-color-8 { border-color: var(--type8-color); color: var(--type8-color); }
+        .type-button.type-color-9 { border-color: var(--type9-color); color: var(--type9-color); }
+
+        .type-button:hover {
+             opacity: 0.8;
+             background-color: var(--light-gray);
+         }
+         /* Style for the currently selected type button */
+         .type-button.selected {
+             background-color: var(--primary-color); /* Use type color instead? */
+             color: white;
+             /* Example using type color: background-color: var(--current-type-color); */
+         }
+
+
         #type-detail-content {
-            margin-top: 1.5rem;
-            padding: 15px;
-            border: 1px solid var(--light-gray);
-            border-radius: 5px;
+            margin-top: 2rem;
+            padding: 25px; /* More padding */
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            position: relative; /* For colored border */
+             overflow: hidden; /* To contain the border */
+             background-color: #fff; /* Ensure background */
         }
+        /* Add colored left border based on JS */
+        #type-detail-content::before {
+             content: '';
+             position: absolute;
+             left: 0;
+             top: 0;
+             bottom: 0;
+             width: 6px; /* Thickness of the border */
+             background-color: var(--border-color); /* Default border color */
+             transition: background-color 0.3s ease;
+         }
+
         #type-detail-content h3:first-child {
-            margin-top: 0; /* Pas de marge en haut pour le premier titre */
+            margin-top: 0;
+             text-align: left; /* Align title left */
+             margin-bottom: 1.5rem;
         }
-        .type-detail-section {
-            margin-bottom: 1rem;
-        }
-        /* Using H4 style defined globally now */
-        /* .type-detail-section h4 { ... } */
+         .type-detail-section p { text-align: left; } /* Align detail paragraphs left */
+         .type-detail-section strong { color: var(--text-color); font-weight: 600; }
+
+         /* Back button specific to type details */
+         #hide-details-btn-container {
+             text-align: center;
+             margin-top: 2rem;
+             padding-top: 1rem;
+             border-top: 1px solid var(--border-color);
+         }
+
 
         /* --- Comparison --- */
+         #comparison h2 { margin-bottom: 1rem; }
+         #comparison p:first-of-type { margin-bottom: 2rem; text-align: center; color: var(--text-muted-color);}
         #comparison-selectors {
             display: flex;
-            justify-content: space-around;
+            justify-content: center; /* Center selectors */
             align-items: center;
-            margin-bottom: 1.5rem;
-            gap: 15px;
-            flex-wrap: wrap; /* Pour mobile */
+            margin-bottom: 2rem;
+            gap: 25px; /* More gap */
+            flex-wrap: wrap;
         }
         #comparison-selectors label {
-            margin-right: 5px;
-            font-weight: bold;
+            margin-right: 8px;
+            font-weight: 600;
+            color: var(--text-color);
         }
         #comparison-selectors select {
-            padding: 8px;
+            padding: 10px 15px;
             border: 1px solid var(--medium-gray);
-            border-radius: 4px;
-            min-width: 150px; /* Donne de l'espace */
+            border-radius: 6px;
+            min-width: 200px;
+            background-color: var(--card-bg-color); /* Match background */
+             font-size: 0.95rem;
+             cursor: pointer;
         }
+         #comparison .actions-container:nth-of-type(1) { /* Compare button */
+             margin-top: 0;
+             margin-bottom: 2rem;
+         }
         #comparison-result {
-            margin-top: 1.5rem;
-            padding: 15px;
+            margin-top: 2rem;
+            padding: 20px;
             background-color: var(--light-gray);
-            border-radius: 5px;
-            min-height: 50px; /* Pour éviter les sauts de layout */
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            min-height: 60px;
         }
+         #comparison-result h4 {
+             color: var(--primary-color);
+             text-align: center;
+             margin-top: 0;
+             margin-bottom: 1rem;
+             border-bottom: none;
+         }
+         #comparison-result p { text-align: left; }
+         #comparison-result em { font-size: 0.85rem; color: var(--text-muted-color); }
+         #comparison .actions-container:nth-of-type(2) { /* Back button */
+             margin-top: 2rem;
+             padding-top: 1rem;
+             border-top: 1px solid var(--border-color);
+         }
+
 
         /* --- Responsive Adjustments --- */
-        @media (max-width: 600px) {
-            body {
-                padding: 10px 5px;
-            }
-            #app {
-                padding: 15px;
-            }
-            h1 { font-size: 1.8rem; }
-            h2 { font-size: 1.5rem; }
-            button { padding: 8px 15px; font-size: 0.9rem; }
+        @media (max-width: 768px) {
+             #app { padding: 20px 25px; }
+             h1 { font-size: 1.8rem; }
+             h2 { font-size: 1.5rem; }
+             h3 { font-size: 1.3rem; }
+            button { padding: 10px 18px; font-size: 0.9rem; }
+            .actions-container { gap: 10px; }
 
-            #results-chart {
-                height: 180px; /* Adjusted height */
-            }
-             .chart-bar-container {
-                 width: 10%; /* Ajustement pour petit écran */
-             }
-            .chart-label {
-                 font-size: 0.75rem; /* Adjusted label size */
-             }
-            .chart-bar::after { /* Adjust tooltip position on mobile if needed */
-                top: -20px;
-                font-size: 0.7rem;
-            }
+             #results-chart { height: 180px; }
+             .chart-bar-container { width: 10%; }
+            .chart-label { font-size: 0.8rem; }
+            .chart-bar::after { font-size: 0.7rem; padding: 3px 6px; top: -22px; }
 
-
-            #comparison-selectors {
-                flex-direction: column;
-                align-items: stretch; /* Prend toute la largeur */
-            }
-            #comparison-selectors select {
-                 width: 100%; /* Pleine largeur sur mobile */
-                 margin-top: 5px;
-            }
+            #comparison-selectors { flex-direction: column; gap: 15px; align-items: stretch;}
+            #comparison-selectors select { width: 100%; min-width: auto; }
         }
 
-        /* Type specific colors */
-        /* Classes for text/border color */
-        .type-color-1 { color: var(--type1-color); border-color: var(--type1-color); }
-        .type-color-2 { color: var(--type2-color); border-color: var(--type2-color); }
-        .type-color-3 { color: var(--type3-color); border-color: var(--type3-color); }
-        .type-color-4 { color: var(--type4-color); border-color: var(--type4-color); }
-        .type-color-5 { color: var(--type5-color); border-color: var(--type5-color); }
-        .type-color-6 { color: var(--type6-color); border-color: var(--type6-color); }
-        .type-color-7 { color: var(--type7-color); border-color: var(--type7-color); }
-        .type-color-8 { color: var(--type8-color); border-color: var(--type8-color); }
-        .type-color-9 { color: var(--type9-color); border-color: var(--type9-color); }
+         @media (max-width: 480px) {
+             body { padding: 15px 5px; }
+             #app { padding: 15px; }
+             h1 { font-size: 1.6rem; }
+             h2 { font-size: 1.3rem; }
+             h3 { font-size: 1.15rem; }
+             button { padding: 9px 15px; font-size: 0.85rem; }
+             .actions-container { gap: 8px; }
 
-        /* Classes for background color - important to override defaults */
-        .type-bg-1 { background-color: var(--type1-color) !important; }
-        .type-bg-2 { background-color: var(--type2-color) !important; }
-        .type-bg-3 { background-color: var(--type3-color) !important; }
-        .type-bg-4 { background-color: var(--type4-color) !important; }
-        .type-bg-5 { background-color: var(--type5-color) !important; }
-        .type-bg-6 { background-color: var(--type6-color) !important; }
-        .type-bg-7 { background-color: var(--type7-color) !important; }
-        .type-bg-8 { background-color: var(--type8-color) !important; }
-        .type-bg-9 { background-color: var(--type9-color) !important; }
+             .likert-scale label { min-width: 55px; font-size: 0.75rem; }
+             .likert-scale { justify-content: center; gap: 5px; }
 
+             #results-chart { height: 160px; }
+             .chart-label { font-size: 0.7rem; }
+             .chart-bar::after { display: none; } /* Hide tooltip on very small screens */
+
+             #type-selection { gap: 8px; }
+             .type-button { min-width: 45px; height: 45px; font-size: 1rem; }
+             #type-detail-content { padding: 15px; }
+         }
+
+        /* Type specific background/border colors (Used by JS) */
+        /* Backgrounds used for chart bars */
+        .type-bg-1 { background-color: var(--type1-color); }
+        .type-bg-2 { background-color: var(--type2-color); }
+        .type-bg-3 { background-color: var(--type3-color); }
+        .type-bg-4 { background-color: var(--type4-color); }
+        .type-bg-5 { background-color: var(--type5-color); }
+        .type-bg-6 { background-color: var(--type6-color); }
+        .type-bg-7 { background-color: var(--type7-color); }
+        .type-bg-8 { background-color: var(--type8-color); }
+        .type-bg-9 { background-color: var(--type9-color); }
+
+        /* Border colors used for type details */
+        .type-border-1::before { background-color: var(--type1-color); }
+        .type-border-2::before { background-color: var(--type2-color); }
+        .type-border-3::before { background-color: var(--type3-color); }
+        .type-border-4::before { background-color: var(--type4-color); }
+        .type-border-5::before { background-color: var(--type5-color); }
+        .type-border-6::before { background-color: var(--type6-color); }
+        .type-border-7::before { background-color: var(--type7-color); }
+        .type-border-8::before { background-color: var(--type8-color); }
+        .type-border-9::before { background-color: var(--type9-color); }
+
+         /* Text colors used for titles/highlights */
+        .type-text-1 { color: var(--type1-color); }
+        .type-text-2 { color: var(--type2-color); }
+        .type-text-3 { color: var(--type3-color); }
+        .type-text-4 { color: var(--type4-color); }
+        .type-text-5 { color: var(--type5-color); }
+        .type-text-6 { color: var(--type6-color); }
+        .type-text-7 { color: var(--type7-color); }
+        .type-text-8 { color: var(--type8-color); }
+        .type-text-9 { color: var(--type9-color); }
 
     </style>
 </head>
@@ -402,34 +571,36 @@
         <!-- ==== HOME VIEW ==== -->
         <section id="home" class="view active">
             <h1>Bienvenue sur l'Explorateur d'Ennéagramme</h1>
-            <p>L'Ennéagramme est un système d'étude de la personnalité basé sur neuf types distincts. Découvrez le vôtre pour mieux vous comprendre et améliorer vos relations.</p>
-            <div class="actions">
+            <p>L'Ennéagramme est un système fascinant de compréhension de la personnalité. Découvrez votre type pour mieux vous connaître, améliorer vos relations et identifier des pistes de développement personnel.</p>
+            <div class="actions-container">
                 <button id="start-test-btn">Démarrer le Test</button>
-                <button id="view-types-btn" class="secondary">Voir les 9 Types</button>
+                <button id="view-types-btn" class="secondary">Explorer les 9 Types</button>
                  <button id="view-comparison-btn" class="outline">Comparer les Types</button>
             </div>
-             <div id="saved-result-info" style="margin-top: 20px; font-size: 0.9em; color: var(--dark-gray); display: none;">
-                <p>Un résultat précédent a été trouvé.</p>
-                <button id="show-saved-result-btn" class="outline">Afficher mon résultat sauvegardé</button>
+             <div id="saved-result-info">
+                <p>Un résultat précédent a été trouvé dans ce navigateur.</p>
+                <button id="show-saved-result-btn" class="outline">Afficher mon dernier résultat</button>
+                <button id="clear-saved-result-btn" class="outline danger" style="border-color: var(--danger-color); color: var(--danger-color);">Effacer</button>
             </div>
         </section>
 
         <!-- ==== TEST VIEW ==== -->
         <section id="test" class="view">
             <h2>Questionnaire Ennéagramme</h2>
+            <p><span id="current-q-number">1</span> / <span id="total-q-number"></span></p>
             <div id="test-progress-container">
                 <div id="test-progress"></div>
             </div>
-            <p><span id="current-q-number">1</span> / <span id="total-q-number"></span></p>
-            <div id="question-container">
-                <!-- Questions will be loaded here -->
-            </div>
+            <div id="question-container"></div>
             <div id="test-navigation">
-                <button id="prev-btn" disabled>Précédent</button>
+                <button id="prev-btn" class="outline" disabled>Précédent</button>
+                <span> <!-- Spacer or status --> </span>
                 <button id="next-btn">Suivant</button>
-                 <button id="finish-btn" style="display: none;">Terminer</button>
+                 <button id="finish-btn" class="secondary" style="display: none;">Voir mes Résultats</button>
             </div>
-             <button onclick="showView('home')" class="outline" style="margin-top: 15px;">Abandonner & Retour Accueil</button>
+             <div class="actions-container">
+                 <button onclick="showView('home')" class="outline" style="border-color: var(--danger-color); color: var(--danger-color);">Abandonner & Retour Accueil</button>
+             </div>
         </section>
 
         <!-- ==== RESULTS VIEW ==== -->
@@ -441,13 +612,10 @@
             </div>
 
             <h3>Scores par type :</h3>
-            <div id="results-chart">
-                <!-- Chart bars will be generated here -->
-            </div>
+            <div id="results-chart"></div>
 
-            <div id="results-actions">
+            <div id="results-actions" class="actions-container">
                 <button id="view-details-btn">Voir les détails de mon type</button>
-                <!-- === MODIFICATION ICI dans onclick === -->
                 <button onclick="populateTypeSelection(); showView('types');" class="secondary">Explorer les autres types</button>
                 <button onclick="resetTestAndShowHome()" class="outline">Refaire le test</button>
             </div>
@@ -456,197 +624,111 @@
         <!-- ==== TYPES VIEW ==== -->
         <section id="types" class="view">
             <h2>Les 9 Types de l'Ennéagramme</h2>
-            <div id="type-selection">
-                <!-- Type selection buttons will be generated here -->
-            </div>
+            <div id="type-selection"></div>
             <div id="type-detail-content" style="display: none;">
-                <!-- Type details will be loaded here -->
+                 <!-- Type details loaded here -->
+                 <!-- === AJOUT : Bouton Retour DANS les détails === -->
+                 <div id="hide-details-btn-container">
+                     <button id="hide-details-btn" class="outline">Retour à la sélection des types</button>
+                 </div>
             </div>
-             <button onclick="goBackToPreviousViewOrHome()" class="outline" style="margin-top: 20px;">Retour</button>
+             <!-- === AJOUT : Bouton Retour général pour la vue Types === -->
+             <div class="actions-container" style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                  <button id="types-back-btn" class="outline">Retour</button>
+             </div>
         </section>
 
          <!-- ==== COMPARISON VIEW ==== -->
         <section id="comparison" class="view">
             <h2>Comparaison Relationnelle</h2>
-            <p>Sélectionnez deux types pour voir un aperçu de leur dynamique relationnelle.</p>
+            <p>Sélectionnez deux types pour découvrir un aperçu de leur dynamique.</p>
              <div id="comparison-selectors">
                  <div>
-                    <label for="compare-type1">Type 1:</label>
-                    <select id="compare-type1">
-                        <!-- Options generated by JS -->
-                    </select>
+                    <label for="compare-type1">Type 1 :</label>
+                    <select id="compare-type1"></select>
                  </div>
                  <div>
-                     <label for="compare-type2">Type 2:</label>
-                    <select id="compare-type2">
-                         <!-- Options generated by JS -->
-                    </select>
+                     <label for="compare-type2">Type 2 :</label>
+                    <select id="compare-type2"></select>
                  </div>
             </div>
-            <button id="compare-btn" class="primary">Comparer</button>
+             <div class="actions-container">
+                 <button id="compare-btn" class="primary">Comparer</button>
+             </div>
 
-            <div id="comparison-result">
-                <!-- Comparison result shown here -->
-            </div>
-            <button onclick="showView('home')" class="outline" style="margin-top: 20px;">Retour à l'accueil</button>
+            <div id="comparison-result"></div>
+
+             <div class="actions-container">
+                 <!-- === MODIFICATION : Bouton retour spécifique === -->
+                 <button onclick="showView('home')" class="outline">Retour à l'accueil</button>
+             </div>
         </section>
 
     </div>
 
     <script>
-        // Wrap all code in DOMContentLoaded to ensure HTML is ready
         document.addEventListener('DOMContentLoaded', () => {
 
-            // ---=== DATABASE ===---
-            const enneagramData = {
-                 1: { name: "Le Perfectionniste", color: "var(--type1-color)", icon: "🎯", description: "Principlé, déterminé, contrôlé et perfectionniste.", strengths: "Éthique, fiable, productif, sage, idéaliste.", weaknesses: "Critique, jugement, rigidité, ressentiment.", motivation: "Être bon, avoir raison, être juste.", fear: "Être corrompu, mauvais, défectueux.", stress: "Devient critique et moralisateur (comme un 4 malsain).", security: "Se détend et devient plus spontané (comme un 7 sain).", growth: "Accepter l'imperfection, cultiver la sérénité, développer l'empathie.", tips: "Pratiquer la pleine conscience, célébrer les petites victoires, déléguer." },
-                 2: { name: "L'Altruiste", color: "var(--type2-color)", icon: "❤️", description: "Attentionné, généreux, possessif et manipulateur.", strengths: "Aimant, attentionné, généreux, empathique.", weaknesses: "Orgueilleux, dépendant, manipulateur (indirectement).", motivation: "Être aimé, être nécessaire.", fear: "Ne pas être aimé, ne pas être voulu.", stress: "Devient agressif et autoritaire (comme un 8 malsain).", security: "Devient plus conscient de ses propres besoins (comme un 4 sain).", growth: "Reconnaître ses propres besoins, fixer des limites saines, aimer sans attente.", tips: "Tenir un journal de ses besoins, apprendre à dire non, pratiquer l'auto-compassion." },
-                 3: { name: "Le Battant", color: "var(--type3-color)", icon: "⭐", description: "Orienté succès, adaptable, excellent, mais vaniteux et superficiel.", strengths: "Ambitieux, efficace, confiant, énergique.", weaknesses: "Compétitif à l'excès, workaholic, vaniteux, peur de l'échec.", motivation: "Être valorisé, admiré, avoir du succès.", fear: "Ne pas avoir de valeur, échouer.", stress: "Se replie et devient apathique (comme un 9 malsain).", security: "Devient plus coopératif et authentique (comme un 6 sain).", growth: "Cultiver l'authenticité, valoriser les relations, ralentir.", tips: "Identifier ses vraies valeurs, passer du temps de qualité sans objectif, pratiquer l'humilité." },
-                 4: { name: "Le Romantique", color: "var(--type4-color)", icon: "🎨", description: "Introspectif, expressif, dramatique et réservé.", strengths: "Créatif, sensible, introspectif, authentique.", weaknesses: "Lunatique, mélancolique, auto-absorbé, envieux.", motivation: "Être unique, authentique, compris.", fear: "Ne pas avoir d'identité, être insignifiant.", stress: "Devient trop dépendant et en demande (comme un 2 malsain).", security: "Devient plus objectif et principiel (comme un 1 sain).", growth: "Apprécier le présent, cultiver la gratitude, agir malgré l'humeur.", tips: "Pratiquer la gratitude quotidienne, s'engager dans des actions concrètes, équilibrer émotion et raison." },
-                 5: { name: "L'Observateur", color: "var(--type5-color)", icon: "🧠", description: "Perspicace, innovant, secret et isolé.", strengths: "Analytique, curieux, indépendant, objectif.", weaknesses: "Détaché, avare (temps, énergie), isolé, cynique.", motivation: "Être compétent, capable, savoir.", fear: "Être inutile, incapable, envahi.", stress: "Devient hyperactif et dispersé (comme un 7 malsain).", security: "Devient plus confiant et engagé (comme un 8 sain).", growth: "S'engager avec le monde, partager ses ressources, connecter corps et esprit.", tips: "Pratiquer l'incarnation (sport, danse), fixer des limites au temps de recherche, partager ses découvertes." },
-                 6: { name: "Le Loyaliste", color: "var(--type6-color)", icon: "🛡️", description: "Engagé, responsable, anxieux et méfiant.", strengths: "Loyal, responsable, travailleur, prévoyant.", weaknesses: "Anxieux, indécis, méfiant, pessimiste.", motivation: "Avoir sécurité et soutien.", fear: "Être sans soutien, abandonné, incapable de survivre seul.", stress: "Devient compétitif et arrogant (comme un 3 malsain).", security: "Devient plus détendu et optimiste (comme un 9 sain).", growth: "Faire confiance à soi-même, gérer l'anxiété, accepter l'incertitude.", tips: "Identifier les scénarios catastrophes vs réalités, pratiquer la prise de décision, chercher des preuves de soutien." },
-                 7: { name: "L'Épicurien", color: "var(--type7-color)", icon: "🎉", description: "Occupé, productif, spontané, mais dispersé et excessif.", strengths: "Optimiste, énergique, curieux, spontané.", weaknesses: "Superficiel, impulsif, dispersé, évite la douleur.", motivation: "Être satisfait, content, éviter la souffrance.", fear: "Être privé, piégé dans la souffrance.", stress: "Devient critique et perfectionniste (comme un 1 malsain).", security: "Devient plus concentré et profond (comme un 5 sain).", growth: "Accepter la douleur et l'ennui, s'engager en profondeur, trouver la joie dans le simple.", tips: "Pratiquer la pleine conscience, terminer les projets commencés, explorer les émotions difficiles." },
-                 8: { name: "Le Protecteur", color: "var(--type8-color)", icon: "👑", description: "Puissant, dominant, assertif, mais contrôlant et intimidant.", strengths: "Protecteur, décisif, volontaire, énergique.", weaknesses: "Contrôlant, dominateur, insensible, vengeur.", motivation: "Se protéger, contrôler son environnement.", fear: "Être contrôlé, blessé, faible.", stress: "Se retire et devient craintif (comme un 5 malsain).", security: "Devient plus attentionné et ouvert (comme un 2 sain).", growth: "Développer la vulnérabilité, utiliser sa force pour les autres, écouter.", tips: "Pratiquer l'écoute active, reconnaître l'impact de sa force, exprimer sa vulnérabilité dans un cadre sûr." },
-                 9: { name: "Le Médiateur", color: "var(--type9-color)", icon: "☮️", description: "Paisible, rassurant, agréable, mais complaisant et têtu.", strengths: "Accommodant, diplomate, patient, stable.", weaknesses: "Procrastinateur, indécis, passif-agressif, têtu.", motivation: "Maintenir la paix intérieure et l'harmonie extérieure.", fear: "Perte, séparation, conflit.", stress: "Devient anxieux et inquiet (comme un 6 malsain).", security: "Devient plus affirmé et orienté objectifs (comme un 3 sain).", growth: "S'affirmer, reconnaître sa propre colère, définir ses priorités.", tips: "Identifier ses propres désirs, pratiquer l'affirmation de soi (petits pas), reconnaître et exprimer la colère de manière saine." }
+            // ---=== DATABASE (Keep existing data) ===---
+             const enneagramData = {
+                 1: { name: "Le Perfectionniste", color: "var(--type1-color)", icon: "🎯", description: "Principlé, déterminé, contrôlé et perfectionniste. Recherche l'intégrité et l'amélioration.", strengths: "Éthique, fiable, productif, sage, idéaliste, organisé.", weaknesses: "Critique (soi et autres), jugement, rigidité, ressentiment, peur de l'erreur.", motivation: "Être bon, avoir raison, être juste, éviter la critique.", fear: "Être corrompu, mauvais, défectueux, irresponsable.", stress: "Devient plus critique, rigide et moralisateur (comme un 4 malsain).", security: "Se détend, devient plus spontané et accepte l'imperfection (comme un 7 sain).", growth: "Accepter l'imperfection (en soi et chez les autres), cultiver la sérénité et la patience, développer l'empathie.", tips: "Pratiquer la pleine conscience de la critique intérieure, célébrer les progrès (pas seulement la perfection), déléguer, apprendre à se détendre.", growthPath: 4, securityPath: 7 },
+                 2: { name: "L'Altruiste", color: "var(--type2-color)", icon: "❤️", description: "Attentionné, généreux, axé sur les relations, mais peut être possessif ou manipulateur.", strengths: "Aimant, attentionné, généreux, empathique, soutenant.", weaknesses: "Fierté (de ne pas avoir besoin d'aide), dépendance affective, manipulation indirecte, difficulté à dire non.", motivation: "Être aimé, être nécessaire, être apprécié.", fear: "Ne pas être aimé, ne pas être voulu, être rejeté.", stress: "Devient plus agressif, autoritaire et potentiellement manipulateur (comme un 8 malsain).", security: "Devient plus conscient de ses propres besoins et limites, plus authentique (comme un 4 sain).", growth: "Reconnaître et exprimer ses propres besoins, fixer des limites saines, apprendre à recevoir, aimer sans attente de retour.", tips: "Tenir un journal de ses besoins/sentiments, pratiquer à dire 'non' poliment, demander de l'aide, s'offrir des moments pour soi.", growthPath: 8, securityPath: 4 },
+                 3: { name: "Le Battant", color: "var(--type3-color)", icon: "⭐", description: "Orienté succès, adaptable, efficace, mais peut être vaniteux et trop centré sur l'image.", strengths: "Ambitieux, efficace, confiant, énergique, motivant, adaptable.", weaknesses: "Compétitif à l'excès, 'workaholic', vaniteux, peur de l'échec, déconnexion des sentiments.", motivation: "Être valorisé, admiré, avoir du succès, être le meilleur.", fear: "Ne pas avoir de valeur intrinsèque, échouer, être perçu comme incompétent.", stress: "Se replie, devient apathique, perd sa motivation (comme un 9 malsain).", security: "Devient plus coopératif, authentique et attaché aux autres (comme un 6 sain).", growth: "Cultiver l'authenticité (sentiments vs image), valoriser les relations pour elles-mêmes, ralentir, accepter l'échec comme apprentissage.", tips: "Identifier ses vraies valeurs (pas seulement celles qui réussissent), planifier du temps 'off' sans objectif de performance, pratiquer l'écoute active.", growthPath: 9, securityPath: 6 },
+                 4: { name: "Le Romantique", color: "var(--type4-color)", icon: "🎨", description: "Introspectif, expressif, unique, mais peut être mélancolique et auto-absorbé.", strengths: "Créatif, sensible, introspectif, authentique, empathique, profond.", weaknesses: "Lunatique, mélancolique, auto-absorbé, envieux, sentiment d'incomplétude.", motivation: "Être unique, authentique, compris, trouver son identité.", fear: "Ne pas avoir d'identité propre, être insignifiant, ordinaire, abandonné.", stress: "Devient excessivement dépendant, en demande d'attention, s'accroche aux autres (comme un 2 malsain).", security: "Devient plus objectif, engagé dans l'action et moins submergé par les émotions (comme un 1 sain).", growth: "Apprécier le présent et l'ordinaire, cultiver la gratitude, agir malgré l'humeur, équilibrer émotion et raison.", tips: "Pratiquer la gratitude quotidienne, s'engager dans des actions créatives concrètes, reconnaître la valeur dans le 'commun', rester ancré.", growthPath: 2, securityPath: 1 },
+                 5: { name: "L'Observateur", color: "var(--type5-color)", icon: "🧠", description: "Perspicace, curieux, indépendant, mais peut être détaché et isolé.", strengths: "Analytique, perspicace, curieux, indépendant, objectif, calme.", weaknesses: "Détaché émotionnellement, avare (temps, énergie, savoir), isolé, peur de l'engagement.", motivation: "Être compétent, capable, savoir, comprendre.", fear: "Être inutile, incapable, impuissant, envahi, submergé par les besoins des autres.", stress: "Devient hyperactif, dispersé, recherche frénétiquement des distractions (comme un 7 malsain).", security: "Devient plus confiant, engagé, assertif et connecté à son corps (comme un 8 sain).", growth: "S'engager avec le monde et les émotions, partager ses ressources (savoir, temps), connecter corps et esprit.", tips: "Pratiquer l'incarnation (sport, danse, nature), fixer des limites au temps de recherche, s'entraîner à partager ses idées/sentiments, agir avant d'être 'prêt'.", growthPath: 7, securityPath: 8 },
+                 6: { name: "Le Loyaliste", color: "var(--type6-color)", icon: "🛡️", description: "Engagé, responsable, orienté sécurité, mais peut être anxieux et méfiant.", strengths: "Loyal, responsable, travailleur, prévoyant, courageux (face aux peurs).", weaknesses: "Anxieux, indécis, méfiant, pessimiste, projette ses peurs.", motivation: "Avoir sécurité, soutien, certitude.", fear: "Être sans soutien, abandonné, incapable de survivre seul, faire une erreur irréparable.", stress: "Devient compétitif, arrogant, cherche à prouver sa valeur (comme un 3 malsain).", security: "Devient plus détendu, confiant, optimiste et en paix (comme un 9 sain).", growth: "Faire confiance à son propre jugement intérieur, gérer l'anxiété sans la laisser paralyser, accepter l'incertitude, agir malgré la peur.", tips: "Identifier les scénarios catastrophes vs réalités, pratiquer la prise de décision (même petites), chercher des preuves de soutien (au lieu de preuves de danger), méditation.", growthPath: 3, securityPath: 9 },
+                 7: { name: "L'Épicurien", color: "var(--type7-color)", icon: "🎉", description: "Optimiste, spontané, polyvalent, mais peut être dispersé et éviter la douleur.", strengths: "Optimiste, énergique, curieux, spontané, visionnaire, joyeux.", weaknesses: "Superficiel, impulsif, dispersé, évite la douleur et l'ennui, difficulté à s'engager.", motivation: "Être satisfait, content, libre, éviter la souffrance et la limitation.", fear: "Être privé, piégé dans la souffrance ou l'ennui, manquer quelque chose d'important.", stress: "Devient critique, perfectionniste, rigide (comme un 1 malsain).", security: "Devient plus concentré, profond, capable d'introspection et d'engagement (comme un 5 sain).", growth: "Accepter et traverser la douleur et l'ennui, s'engager en profondeur (projets, relations), trouver la joie dans la simplicité, apprécier le présent.", tips: "Pratiquer la pleine conscience, finir les projets commencés, explorer volontairement les émotions difficiles, limiter les options.", growthPath: 1, securityPath: 5 },
+                 8: { name: "Le Protecteur", color: "var(--type8-color)", icon: "👑", description: "Puissant, assertif, protecteur, mais peut être contrôlant et intimidant.", strengths: "Protecteur, décisif, volontaire, énergique, juste, leader naturel.", weaknesses: "Contrôlant, dominateur, insensible (surtout à la vulnérabilité), vengeur, excessif.", motivation: "Se protéger (et protéger les siens), contrôler son environnement, être fort.", fear: "Être contrôlé, blessé, faible, vulnérable, trahi.", stress: "Se retire, devient secret, craintif et isolé (comme un 5 malsain).", security: "Devient plus attentionné, ouvert de cœur, utilise sa force pour soutenir (comme un 2 sain).", growth: "Développer la vulnérabilité, reconnaître l'impact de sa force, écouter les autres, utiliser sa puissance au service des autres (pas seulement pour le contrôle).", tips: "Pratiquer l'écoute active, remarquer sa réactivité physique à la vulnérabilité (la sienne ou celle des autres), s'excuser sincèrement, choisir ses combats.", growthPath: 5, securityPath: 2 },
+                 9: { name: "Le Médiateur", color: "var(--type9-color)", icon: "☮️", description: "Paisible, agréable, réceptif, mais peut être complaisant et éviter les conflits.", strengths: "Accommodant, diplomate, patient, stable, inclusif, apaisant.", weaknesses: "Procrastinateur, indécis, passif-agressif, têtu (inertie), difficulté à identifier ses propres besoins/colère.", motivation: "Maintenir la paix intérieure et l'harmonie extérieure, éviter les conflits.", fear: "Perte, séparation, conflit, tension, être ignoré.", stress: "Devient anxieux, inquiet, submergé (comme un 6 malsain).", security: "Devient plus affirmé, énergique, orienté objectifs (comme un 3 sain).", growth: "S'affirmer, reconnaître et accepter sa propre colère comme énergie, définir ses priorités, agir pour ses propres désirs.", tips: "Identifier ses propres désirs (même petits), pratiquer l'affirmation de soi ('Je veux...', 'Je pense...'), reconnaître les signes physiques de la colère/tension, agir par petits pas.", growthPath: 6, securityPath: 3 }
+             };
+            const questions = [ /* Garder les mêmes questions qu'avant */
+                { id: 1, text: "J'ai des principes forts et je m'efforce de les respecter.", type: 1 },{ id: 2, text: "Je suis souvent critique envers moi-même ou les autres quand les choses ne sont pas bien faites.", type: 1 },{ id: 3, text: "L'organisation et l'ordre sont importants pour moi.", type: 1 },{ id: 4, text: "J'aime aider les autres et me sentir nécessaire.", type: 2 },{ id: 5, text: "J'ai parfois du mal à reconnaître mes propres besoins.", type: 2 },{ id: 6, text: "Exprimer ma gratitude et mon affection est naturel pour moi.", type: 2 },{ id: 7, text: "Le succès et la reconnaissance sont des moteurs importants pour moi.", type: 3 },{ id: 8, text: "Je suis efficace et j'aime atteindre mes objectifs.", type: 3 },{ id: 9, text: "Je m'adapte facilement pour plaire ou impressionner.", type: 3 },{ id: 10, text: "Je me sens souvent différent des autres, unique.", type: 4 },{ id: 11, text: "Mes émotions sont intenses et importantes pour moi.", type: 4 },{ id: 12, text: "Je recherche l'authenticité et la profondeur dans ma vie.", type: 4 },{ id: 13, text: "J'ai besoin de comprendre le monde qui m'entoure en détail.", type: 5 },{ id: 14, text: "J'apprécie mon temps seul pour réfléchir et recharger mes batteries.", type: 5 },{ id: 15, text: "Je préfère observer avant de participer.", type: 5 },{ id: 16, text: "La sécurité et la loyauté sont très importantes pour moi.", type: 6 },{ id: 17, text: "J'ai tendance à imaginer les pires scénarios possibles.", type: 6 },{ id: 18, text: "Je cherche souvent l'avis des autres avant de prendre une décision.", type: 6 },{ id: 19, text: "J'aime explorer de nouvelles options et expériences.", type: 7 },{ id: 20, text: "J'essaie d'éviter les sentiments négatifs et la douleur.", type: 7 },{ id: 21, text: "Je suis généralement optimiste et plein d'énergie.", type: 7 },{ id: 22, text: "Je prends les devants et n'hésite pas à exprimer mon opinion.", type: 8 },{ id: 23, text: "Je protège les personnes qui me sont chères.", type: 8 },{ id: 24, text: "J'aime avoir le contrôle des situations.", type: 8 },{ id: 25, text: "Je cherche à éviter les conflits et à maintenir l'harmonie.", type: 9 },{ id: 26, text: "J'ai parfois du mal à savoir ce que je veux vraiment.", type: 9 },{ id: 27, text: "Je peux voir tous les points de vue dans une situation.", type: 9 },
+            ];
+            const relationshipMatrix = { /* Garder la matrice enrichie précédente */
+                "1-1": "Partage de valeurs élevées, discipline mutuelle. Risque de critiques réciproques excessives et de rigidité.","1-2": "Le 1 apporte la structure, le 2 la chaleur humaine. Le 1 peut trouver le 2 trop émotif ou indirect, le 2 peut se sentir insuffisamment apprécié ou critiqué par le 1.","1-3": "Focalisation sur l'efficacité et l'action. Peuvent être une équipe très productive. Risque de négliger les aspects émotionnels et relationnels.","1-4": "Le 1 est pratique, le 4 est idéaliste/émotionnel. Attraction possible par les différences, mais risque d'incompréhension mutuelle (logique vs sentiment).","1-5": "Combinaison de rigueur (1) et d'analyse (5). Peuvent collaborer sur des projets intellectuels. Risque de détachement émotionnel excessif.","1-6": "Partage d'un sens du devoir et de la responsabilité. Le 1 peut trouver le 6 trop anxieux, le 6 peut trouver le 1 trop critique ou rigide.","1-7": "Contraste entre la discipline du 1 et la spontanéité du 7. Le 1 peut aider le 7 à se structurer, le 7 peut aider le 1 à se détendre. Risque fort de jugement (1->7) et de sentiment d'être limité (7->1).","1-8": "Alliance de force et de principes. Peuvent être puissants ensemble pour une cause. Risque de lutte pour le contrôle et d'insensibilité mutuelle.","1-9": "Le 1 apporte l'ordre, le 9 la paix. Peuvent se stabiliser. Le 1 peut reprocher au 9 son inaction, le 9 peut trouver le 1 trop exigeant.","2-2": "Très centrés sur la relation et l'aide. Risque de négliger leurs propres besoins et de devenir co-dépendants.","2-3": "Le 2 soutient le succès du 3, le 3 apprécie l'admiration du 2. Risque que la relation devienne superficielle ou basée sur l'image.","2-4": "Forte connexion émotionnelle possible. Le 2 apporte le soutien, le 4 la profondeur. Risque de montagnes russes émotionnelles et de dépendance affective.","2-5": "Le 2 tente de 'réchauffer' le 5, le 5 peut se sentir envahi. Le 5 apporte l'objectivité, le 2 la connexion. Nécessite beaucoup de respect des limites.","2-6": "Le 2 rassure le 6 anxieux, le 6 apprécie la loyauté du 2. Risque de dépendance mutuelle et de difficulté à gérer les conflits ouverts.","2-7": "Le 2 est attiré par la joie du 7, le 7 par la générosité du 2. Le 2 peut se sentir négligé, le 7 peut se sentir étouffé par les attentes.","2-8": "Le 2 admire la force du 8, le 8 apprécie le soutien du 2. Dynamique protectrice. Risque de contrôle (8) et de manipulation affective (2).","2-9": "Relation douce et attentionnée. Le 2 prend soin, le 9 maintient l'harmonie. Risque d'évitement des problèmes et de manque d'affirmation.","3-3": "Très axés sur l'image et le succès. Peuvent être un 'power couple'. Risque de compétition et de manque d'authenticité émotionnelle.","3-4": "Le 3 est orienté action/image, le 4 authenticité/émotion. Le 4 peut trouver le 3 superficiel, le 3 peut trouver le 4 trop lunatique. Attraction possible mais défi d'intégration.","3-5": "Focalisation sur la compétence et l'efficacité. Le 3 exécute, le 5 analyse. Peuvent bien travailler ensemble. Risque de négliger la connexion humaine.","3-6": "Le 3 apporte la confiance, le 6 la prudence. Peuvent s'équilibrer si le 3 ne méprise pas les doutes du 6 et si le 6 ne freine pas trop le 3.","3-7": "Très énergique, orienté vers l'action, les projets et les nouvelles expériences. Le 3 apporte l'objectif, le 7 l'enthousiasme. S'encouragent mutuellement. Risque d'éviter les problèmes de fond, la profondeur émotionnelle ou l'engagement durable.","3-8": "Combinaison d'ambition (3) et de puissance (8). Très forts pour atteindre des objectifs concrets. Risque de conflit d'ego et de lutte pour le leadership.","3-9": "Le 3 est actif, le 9 est réceptif. Le 9 admire l'énergie du 3, le 3 apprécie le calme du 9. Le 3 peut pousser le 9, mais risque de le surmener ou de ne pas le voir.","4-4": "Profonde connexion émotionnelle et compréhension mutuelle unique. Risque de se perdre dans la mélancolie, le drame ou l'isolement à deux.","4-5": "Monde intérieur riche (4) rencontre monde intellectuel riche (5). Peuvent s'apprécier mutuellement. Le 4 peut désirer plus d'expression émotionnelle, le 5 plus d'espace.","4-6": "Le 4 apporte la profondeur émotionnelle, le 6 la loyauté et l'engagement. Le 4 peut trouver le 6 trop conventionnel/anxieux, le 6 peut trouver le 4 trop instable.","4-7": "Le 4 cherche la profondeur, le 7 la nouveauté/le plaisir. Peuvent s'inspirer mutuellement (créativité/joie). Risque que le 7 fuie l'intensité du 4, et que le 4 trouve le 7 superficiel.","4-8": "Le 4 apprécie l'authenticité et la force du 8, le 8 peut être intrigué par la profondeur du 4. Risque de confrontations intenses dues à leur nature passionnée.","4-9": "Le 4 cherche l'intensité et l'unicité, le 9 recherche la paix et l'harmonie. Le 9 peut apaiser le 4, le 4 peut aider le 9 à se connecter à ses passions. Risque que le 4 trouve le 9 trop passif et que le 9 trouve le 4 trop dramatique ou exigeant.","5-5": "Beaucoup d'espace personnel, compréhension mutuelle du besoin de retrait et d'analyse. Risque d'isolement excessif et de négligence de la vie pratique ou émotionnelle.","5-6": "Le 5 apporte l'analyse, le 6 la planification des risques. Peuvent former une équipe prudente et compétente. Le 5 peut trouver le 6 trop anxieux, le 6 peut trouver le 5 trop détaché.","5-7": "Combinaison d'exploration mentale (5) et d'exploration expérientielle (7). Stimulant intellectuellement. Risque que le 7 trouve le 5 trop retiré et que le 5 trouve le 7 trop dispersé.","5-8": "Alliance de la stratégie (5) et de la puissance (8). Peuvent être très efficaces ensemble pour des objectifs clairs. Risque de lutte de pouvoir intellectuel vs action, ou de manque de chaleur.","5-9": "Le 5 respecte l'autonomie du 9, le 9 apprécie le calme du 5. Relation peu exigeante. Risque de passivité et de manque d'engagement mutuel.","6-6": "Partage d'une recherche de sécurité et de loyauté. Grande compréhension mutuelle des angoisses. Risque de rester bloqués dans l'indécision ou la méfiance.","6-7": "Le 6 apporte la prudence, le 7 l'optimisme. Peuvent s'équilibrer. Le 6 peut s'inquiéter de l'impulsivité du 7, le 7 peut se sentir freiné par l'anxiété du 6.","6-8": "Le 6 cherche un protecteur (8), le 8 aime protéger (6). Relation basée sur la force et la loyauté. Risque que le 8 devienne trop dominant et le 6 trop dépendant.","6-9": "Recherche commune de sécurité (6) et de confort (9). Peuvent créer un environnement stable et prévisible. Risque d'inertie, de procrastination et d'évitement des conflits nécessaires.","7-7": "Beaucoup d'énergie, d'optimisme et de recherche de plaisir. Très amusant au début. Risque d'éviter les responsabilités, les émotions difficiles et l'engagement profond.","7-8": "Combinaison d'énergie et d'assertivité. Très actifs et entreprenants. Risque de confrontations explosives et de difficulté à ralentir.","7-9": "Le 7 apporte l'énergie et l'optimisme, le 9 la paix et l'acceptation. Le 9 peut stabiliser le 7, le 7 peut dynamiser le 9. Risque que le 7 s'ennuie et que le 9 se sente dépassé.","8-8": "Relation intense, passionnée et directe. Respect mutuel de la force. Risque de luttes de pouvoir constantes et de manque de vulnérabilité.","8-9": "Le 8 prend les devants, le 9 suit et apaise. Le 8 apprécie le calme du 9, le 9 la force protectrice du 8. Risque que le 8 domine excessivement et que le 9 perde sa voix.","9-9": "Relation très paisible, confortable et harmonieuse. Compréhension mutuelle du besoin de tranquillité. Risque majeur d'inertie, de non-dits et de négligence des problèmes."
              };
 
-            // Simplified questions - NEED MORE (45-60) for a real test
-             // Structure: { id: number, text: string, type: number (associated enneagram type) }
-            const questions = [
-                 // Type 1
-                { id: 1, text: "J'ai des principes forts et je m'efforce de les respecter.", type: 1 },
-                { id: 2, text: "Je suis souvent critique envers moi-même ou les autres quand les choses ne sont pas bien faites.", type: 1 },
-                { id: 3, text: "L'organisation et l'ordre sont importants pour moi.", type: 1 },
-                 // Type 2
-                { id: 4, text: "J'aime aider les autres et me sentir nécessaire.", type: 2 },
-                { id: 5, text: "J'ai parfois du mal à reconnaître mes propres besoins.", type: 2 },
-                { id: 6, text: "Exprimer ma gratitude et mon affection est naturel pour moi.", type: 2 },
-                // Type 3
-                { id: 7, text: "Le succès et la reconnaissance sont des moteurs importants pour moi.", type: 3 },
-                { id: 8, text: "Je suis efficace et j'aime atteindre mes objectifs.", type: 3 },
-                { id: 9, text: "Je m'adapte facilement pour plaire ou impressionner.", type: 3 },
-                 // Type 4
-                { id: 10, text: "Je me sens souvent différent des autres, unique.", type: 4 },
-                { id: 11, text: "Mes émotions sont intenses et importantes pour moi.", type: 4 },
-                { id: 12, text: "Je recherche l'authenticité et la profondeur dans ma vie.", type: 4 },
-                // Type 5
-                { id: 13, text: "J'ai besoin de comprendre le monde qui m'entoure en détail.", type: 5 },
-                { id: 14, text: "J'apprécie mon temps seul pour réfléchir et recharger mes batteries.", type: 5 },
-                { id: 15, text: "Je préfère observer avant de participer.", type: 5 },
-                // Type 6
-                { id: 16, text: "La sécurité et la loyauté sont très importantes pour moi.", type: 6 },
-                { id: 17, text: "J'ai tendance à imaginer les pires scénarios possibles.", type: 6 },
-                { id: 18, text: "Je cherche souvent l'avis des autres avant de prendre une décision.", type: 6 },
-                // Type 7
-                { id: 19, text: "J'aime explorer de nouvelles options et expériences.", type: 7 },
-                { id: 20, text: "J'essaie d'éviter les sentiments négatifs et la douleur.", type: 7 },
-                { id: 21, text: "Je suis généralement optimiste et plein d'énergie.", type: 7 },
-                // Type 8
-                { id: 22, text: "Je prends les devants et n'hésite pas à exprimer mon opinion.", type: 8 },
-                { id: 23, text: "Je protège les personnes qui me sont chères.", type: 8 },
-                { id: 24, text: "J'aime avoir le contrôle des situations.", type: 8 },
-                // Type 9
-                { id: 25, text: "Je cherche à éviter les conflits et à maintenir l'harmonie.", type: 9 },
-                { id: 26, text: "J'ai parfois du mal à savoir ce que je veux vraiment.", type: 9 },
-                { id: 27, text: "Je peux voir tous les points de vue dans une situation.", type: 9 },
-                // Add more questions here... (target 45-60 total)
-            ];
-
-            // === MODIFICATION/AJOUT : Matrice relationnelle enrichie ===
-            const relationshipMatrix = {
-                 "1-1": "Partage de valeurs élevées, discipline mutuelle. Risque de critiques réciproques excessives et de rigidité.",
-                 "1-2": "Le 1 apporte la structure, le 2 la chaleur humaine. Le 1 peut trouver le 2 trop émotif ou indirect, le 2 peut se sentir insuffisamment apprécié ou critiqué par le 1.",
-                 "1-3": "Focalisation sur l'efficacité et l'action. Peuvent être une équipe très productive. Risque de négliger les aspects émotionnels et relationnels.",
-                 "1-4": "Le 1 est pratique, le 4 est idéaliste/émotionnel. Attraction possible par les différences, mais risque d'incompréhension mutuelle (logique vs sentiment).",
-                 "1-5": "Combinaison de rigueur (1) et d'analyse (5). Peuvent collaborer sur des projets intellectuels. Risque de détachement émotionnel excessif.",
-                 "1-6": "Partage d'un sens du devoir et de la responsabilité. Le 1 peut trouver le 6 trop anxieux, le 6 peut trouver le 1 trop critique ou rigide.",
-                 "1-7": "Contraste entre la discipline du 1 et la spontanéité du 7. Le 1 peut aider le 7 à se structurer, le 7 peut aider le 1 à se détendre. Risque fort de jugement (1->7) et de sentiment d'être limité (7->1).",
-                 "1-8": "Alliance de force et de principes. Peuvent être puissants ensemble pour une cause. Risque de lutte pour le contrôle et d'insensibilité mutuelle.",
-                 "1-9": "Le 1 apporte l'ordre, le 9 la paix. Peuvent se stabiliser. Le 1 peut reprocher au 9 son inaction, le 9 peut trouver le 1 trop exigeant.",
-                 "2-2": "Très centrés sur la relation et l'aide. Risque de négliger leurs propres besoins et de devenir co-dépendants.",
-                 "2-3": "Le 2 soutient le succès du 3, le 3 apprécie l'admiration du 2. Risque que la relation devienne superficielle ou basée sur l'image.",
-                 "2-4": "Forte connexion émotionnelle possible. Le 2 apporte le soutien, le 4 la profondeur. Risque de montagnes russes émotionnelles et de dépendance affective.",
-                 "2-5": "Le 2 tente de 'réchauffer' le 5, le 5 peut se sentir envahi. Le 5 apporte l'objectivité, le 2 la connexion. Nécessite beaucoup de respect des limites.",
-                 "2-6": "Le 2 rassure le 6 anxieux, le 6 apprécie la loyauté du 2. Risque de dépendance mutuelle et de difficulté à gérer les conflits ouverts.",
-                 "2-7": "Le 2 est attiré par la joie du 7, le 7 par la générosité du 2. Le 2 peut se sentir négligé, le 7 peut se sentir étouffé par les attentes.",
-                 "2-8": "Le 2 admire la force du 8, le 8 apprécie le soutien du 2. Dynamique protectrice. Risque de contrôle (8) et de manipulation affective (2).",
-                 "2-9": "Relation douce et attentionnée. Le 2 prend soin, le 9 maintient l'harmonie. Risque d'évitement des problèmes et de manque d'affirmation.",
-                 "3-3": "Très axés sur l'image et le succès. Peuvent être un 'power couple'. Risque de compétition et de manque d'authenticité émotionnelle.",
-                 "3-4": "Le 3 est orienté action/image, le 4 authenticité/émotion. Le 4 peut trouver le 3 superficiel, le 3 peut trouver le 4 trop lunatique. Attraction possible mais défi d'intégration.",
-                 "3-5": "Focalisation sur la compétence et l'efficacité. Le 3 exécute, le 5 analyse. Peuvent bien travailler ensemble. Risque de négliger la connexion humaine.",
-                 "3-6": "Le 3 apporte la confiance, le 6 la prudence. Peuvent s'équilibrer si le 3 ne méprise pas les doutes du 6 et si le 6 ne freine pas trop le 3.",
-                 "3-7": "Très énergique, orienté vers l'action, les projets et les nouvelles expériences. Le 3 apporte l'objectif, le 7 l'enthousiasme. S'encouragent mutuellement. Risque d'éviter les problèmes de fond, la profondeur émotionnelle ou l'engagement durable.",
-                 "3-8": "Combinaison d'ambition (3) et de puissance (8). Très forts pour atteindre des objectifs concrets. Risque de conflit d'ego et de lutte pour le leadership.",
-                 "3-9": "Le 3 est actif, le 9 est réceptif. Le 9 admire l'énergie du 3, le 3 apprécie le calme du 9. Le 3 peut pousser le 9, mais risque de le surmener ou de ne pas le voir.",
-                 "4-4": "Profonde connexion émotionnelle et compréhension mutuelle unique. Risque de se perdre dans la mélancolie, le drame ou l'isolement à deux.",
-                 "4-5": "Monde intérieur riche (4) rencontre monde intellectuel riche (5). Peuvent s'apprécier mutuellement. Le 4 peut désirer plus d'expression émotionnelle, le 5 plus d'espace.",
-                 "4-6": "Le 4 apporte la profondeur émotionnelle, le 6 la loyauté et l'engagement. Le 4 peut trouver le 6 trop conventionnel/anxieux, le 6 peut trouver le 4 trop instable.",
-                 "4-7": "Le 4 cherche la profondeur, le 7 la nouveauté/le plaisir. Peuvent s'inspirer mutuellement (créativité/joie). Risque que le 7 fuie l'intensité du 4, et que le 4 trouve le 7 superficiel.",
-                 "4-8": "Le 4 apprécie l'authenticité et la force du 8, le 8 peut être intrigué par la profondeur du 4. Risque de confrontations intenses dues à leur nature passionnée.",
-                 "4-9": "Le 4 cherche l'intensité et l'unicité, le 9 recherche la paix et l'harmonie. Le 9 peut apaiser le 4, le 4 peut aider le 9 à se connecter à ses passions. Risque que le 4 trouve le 9 trop passif et que le 9 trouve le 4 trop dramatique ou exigeant.",
-                 "5-5": "Beaucoup d'espace personnel, compréhension mutuelle du besoin de retrait et d'analyse. Risque d'isolement excessif et de négligence de la vie pratique ou émotionnelle.",
-                 "5-6": "Le 5 apporte l'analyse, le 6 la planification des risques. Peuvent former une équipe prudente et compétente. Le 5 peut trouver le 6 trop anxieux, le 6 peut trouver le 5 trop détaché.",
-                 "5-7": "Combinaison d'exploration mentale (5) et d'exploration expérientielle (7). Stimulant intellectuellement. Risque que le 7 trouve le 5 trop retiré et que le 5 trouve le 7 trop dispersé.",
-                 "5-8": "Alliance de la stratégie (5) et de la puissance (8). Peuvent être très efficaces ensemble pour des objectifs clairs. Risque de lutte de pouvoir intellectuel vs action, ou de manque de chaleur.",
-                 "5-9": "Le 5 respecte l'autonomie du 9, le 9 apprécie le calme du 5. Relation peu exigeante. Risque de passivité et de manque d'engagement mutuel.",
-                 "6-6": "Partage d'une recherche de sécurité et de loyauté. Grande compréhension mutuelle des angoisses. Risque de rester bloqués dans l'indécision ou la méfiance.",
-                 "6-7": "Le 6 apporte la prudence, le 7 l'optimisme. Peuvent s'équilibrer. Le 6 peut s'inquiéter de l'impulsivité du 7, le 7 peut se sentir freiné par l'anxiété du 6.",
-                 "6-8": "Le 6 cherche un protecteur (8), le 8 aime protéger (6). Relation basée sur la force et la loyauté. Risque que le 8 devienne trop dominant et le 6 trop dépendant.",
-                 "6-9": "Recherche commune de sécurité (6) et de confort (9). Peuvent créer un environnement stable et prévisible. Risque d'inertie, de procrastination et d'évitement des conflits nécessaires.",
-                 "7-7": "Beaucoup d'énergie, d'optimisme et de recherche de plaisir. Très amusant au début. Risque d'éviter les responsabilités, les émotions difficiles et l'engagement profond.",
-                 "7-8": "Combinaison d'énergie et d'assertivité. Très actifs et entreprenants. Risque de confrontations explosives et de difficulté à ralentir.",
-                 "7-9": "Le 7 apporte l'énergie et l'optimisme, le 9 la paix et l'acceptation. Le 9 peut stabiliser le 7, le 7 peut dynamiser le 9. Risque que le 7 s'ennuie et que le 9 se sente dépassé.",
-                 "8-8": "Relation intense, passionnée et directe. Respect mutuel de la force. Risque de luttes de pouvoir constantes et de manque de vulnérabilité.",
-                 "8-9": "Le 8 prend les devants, le 9 suit et apaise. Le 8 apprécie le calme du 9, le 9 la force protectrice du 8. Risque que le 8 domine excessivement et que le 9 perde sa voix.",
-                 "9-9": "Relation très paisible, confortable et harmonieuse. Compréhension mutuelle du besoin de tranquillité. Risque majeur d'inertie, de non-dits et de négligence des problèmes."
-            };
-
-             // ---=== APPLICATION STATE ===---
+            // ---=== APPLICATION STATE ===---
             let currentView = 'home';
+            let currentViewTarget = null; // Stores the element for the current view
+            let navigationHistory = ['home']; // Simple history stack
             let currentQuestionIndex = 0;
             const questionsPerPage = 5;
-            let userAnswers = {}; // { questionId: score }
-            let scores = {}; // { typeNumber: totalScore }
-            let userResult = null; // { mainType: number, wings: [num], scores: {} }
-             let previousView = 'home'; // To handle back button logic
+            let userAnswers = {};
+            let scores = {};
+            let userResult = null;
 
 
             // ---=== DOM ELEMENTS ===---
             const views = document.querySelectorAll('.view');
             const appContainer = document.getElementById('app');
-
             // Home
             const startTestBtn = document.getElementById('start-test-btn');
             const viewTypesBtn = document.getElementById('view-types-btn');
             const viewComparisonBtn = document.getElementById('view-comparison-btn');
             const savedResultInfo = document.getElementById('saved-result-info');
             const showSavedResultBtn = document.getElementById('show-saved-result-btn');
-
+            const clearSavedResultBtn = document.getElementById('clear-saved-result-btn'); // Added
             // Test
-            const testView = document.getElementById('test');
             const questionContainer = document.getElementById('question-container');
             const progressBar = document.getElementById('test-progress');
-             const currentQNumberSpan = document.getElementById('current-q-number');
+            const currentQNumberSpan = document.getElementById('current-q-number');
             const totalQNumberSpan = document.getElementById('total-q-number');
             const prevBtn = document.getElementById('prev-btn');
             const nextBtn = document.getElementById('next-btn');
             const finishBtn = document.getElementById('finish-btn');
-
             // Results
-            const resultsView = document.getElementById('results');
             const mainTypeNameSpan = document.getElementById('main-type-name');
             const mainTypeNumberSpan = document.getElementById('main-type-number');
             const wingsInfoP = document.getElementById('wings-info');
             const resultsChartDiv = document.getElementById('results-chart');
             const viewDetailsBtn = document.getElementById('view-details-btn');
-
             // Types
-            const typesView = document.getElementById('types');
             const typeSelectionDiv = document.getElementById('type-selection');
             const typeDetailContentDiv = document.getElementById('type-detail-content');
-
-            // Comparison
-            const comparisonView = document.getElementById('comparison');
+             const hideDetailsBtn = document.getElementById('hide-details-btn'); // Added
+             const typesBackBtn = document.getElementById('types-back-btn'); // Added
+             // Comparison
             const compareType1Select = document.getElementById('compare-type1');
             const compareType2Select = document.getElementById('compare-type2');
             const compareBtn = document.getElementById('compare-btn');
@@ -655,59 +737,69 @@
 
             // ---=== FUNCTIONS ===---
 
-            function showView(viewId) {
-                previousView = currentView; // Store the view we are coming from
-                views.forEach(view => {
-                    view.classList.remove('active');
-                });
-                const activeView = document.getElementById(viewId);
-                if (activeView) {
-                    activeView.classList.add('active');
-                    currentView = viewId;
-                    window.scrollTo(0, 0); // Scroll to top on view change
-                } else {
+            // === MODIFICATION : Improved View Management ===
+            function showView(viewId, isBackAction = false) {
+                //console.log(`Navigating to: ${viewId}, Is Back: ${isBackAction}, History: ${navigationHistory}`);
+
+                const targetView = document.getElementById(viewId);
+                if (!targetView) {
                     console.error("View not found:", viewId);
-                     // Fallback to home if view not found
-                    document.getElementById('home').classList.add('active');
-                    currentView = 'home';
+                    showView('home'); // Fallback
+                    return;
                 }
+
+                // Update history only if it's a forward navigation
+                if (!isBackAction) {
+                     // Prevent adding the same view consecutively
+                     if (navigationHistory[navigationHistory.length - 1] !== viewId) {
+                         navigationHistory.push(viewId);
+                     }
+                }
+                 // Limit history size (optional)
+                 // if (navigationHistory.length > 10) navigationHistory.shift();
+
+                views.forEach(view => view.classList.remove('active'));
+                targetView.classList.add('active');
+                currentView = viewId;
+                 currentViewTarget = targetView; // Store the element
+
+                window.scrollTo(0, 0);
             }
 
-            function goBackToPreviousViewOrHome() {
-                // Simple back logic, goes to previous view unless it was test
-                 if (previousView && previousView !== 'test' && previousView !== currentView) {
-                    showView(previousView);
-                } else if (userResult && currentView !== 'results') { // Go to results if test was completed and we are not already there
-                     showView('results');
+             function goBack() {
+                 // Remove the current view from history
+                 if (navigationHistory.length > 1) {
+                     navigationHistory.pop();
+                     const previousViewId = navigationHistory[navigationHistory.length - 1];
+                     //console.log("Going back to:", previousViewId);
+                     showView(previousViewId, true); // Navigate back without adding to history
+                 } else {
+                     //console.log("No more history, going home.");
+                     showView('home', true); // Fallback to home if history is empty or only has one entry
                  }
-                else {
-                    showView('home'); // Default fallback
-                }
-            }
+             }
+            // === FIN MODIFICATION ===
 
 
             // --- Test Functions ---
-             function startTest() {
+            function startTest() {
                 currentQuestionIndex = 0;
-                userAnswers = {};
-                scores = {};
-                userResult = null; // Clear previous result
-                localStorage.removeItem('enneagramResult'); // Clear saved result on new test
-                savedResultInfo.style.display = 'none'; // Hide saved result info
+                userAnswers = {}; scores = {}; userResult = null;
+                localStorage.removeItem('enneagramResult');
+                savedResultInfo.style.display = 'none';
                 totalQNumberSpan.textContent = questions.length;
                 displayCurrentQuestions();
                 updateProgress();
+                 navigationHistory = ['home']; // Reset history for new test
                 showView('test');
-                 // Ensure finish button is hidden initially, next button is visible
-                 nextBtn.style.display = 'inline-block';
-                 finishBtn.style.display = 'none';
+                nextBtn.style.display = 'inline-block'; finishBtn.style.display = 'none';
             }
 
-            function displayCurrentQuestions() {
-                 questionContainer.innerHTML = ''; // Clear previous questions
+             function displayCurrentQuestions() { /* (No changes needed here) */
+                questionContainer.innerHTML = '';
                 const start = currentQuestionIndex;
                 const end = Math.min(start + questionsPerPage, questions.length);
-                currentQNumberSpan.textContent = start + 1; // Display starting question number of the page
+                currentQNumberSpan.textContent = start + 1;
 
                 for (let i = start; i < end; i++) {
                     const q = questions[i];
@@ -716,491 +808,294 @@
                     questionDiv.innerHTML = `
                         <p>${i + 1}. ${q.text}</p>
                         <div class="likert-scale" data-question-id="${q.id}">
-                            <label> <input type="radio" name="q${q.id}" value="1"> <span>Pas du tout<br>d'accord</span> </label>
-                            <label> <input type="radio" name="q${q.id}" value="2"> <span>Plutôt pas<br>d'accord</span> </label>
-                            <label> <input type="radio" name="q${q.id}" value="3"> <span>Neutre</span> </label>
-                            <label> <input type="radio" name="q${q.id}" value="4"> <span>Plutôt<br>d'accord</span> </label>
-                            <label> <input type="radio" name="q${q.id}" value="5"> <span>Tout à fait<br>d'accord</span> </label>
-                        </div>
-                    `;
+                            <label><input type="radio" name="q${q.id}" value="1"><span>Pas du tout<br>d'accord</span></label>
+                            <label><input type="radio" name="q${q.id}" value="2"><span>Plutôt pas<br>d'accord</span></label>
+                            <label><input type="radio" name="q${q.id}" value="3"><span>Neutre</span></label>
+                            <label><input type="radio" name="q${q.id}" value="4"><span>Plutôt<br>d'accord</span></label>
+                            <label><input type="radio" name="q${q.id}" value="5"><span>Tout à fait<br>d'accord</span></label>
+                        </div>`;
                     questionContainer.appendChild(questionDiv);
-
-                    // Restore previous answer if exists for this question
                     if (userAnswers[q.id]) {
-                         const savedAnswerInput = questionDiv.querySelector(`input[name="q${q.id}"][value="${userAnswers[q.id]}"]`);
-                        if(savedAnswerInput) savedAnswerInput.checked = true;
+                        const savedInput = questionDiv.querySelector(`input[name="q${q.id}"][value="${userAnswers[q.id]}"]`);
+                        if(savedInput) savedInput.checked = true;
                     }
-                 }
-
-                 // Add event listener using delegation on the container
-                 questionContainer.removeEventListener('change', handleAnswerChange); // Prevent multiple listeners
-                 questionContainer.addEventListener('change', handleAnswerChange);
-
-                 updateNavigationButtons();
+                }
+                questionContainer.removeEventListener('change', handleAnswerChange);
+                questionContainer.addEventListener('change', handleAnswerChange);
+                updateNavigationButtons();
             }
 
-            function handleAnswerChange(event) {
-                 if (event.target.type === 'radio' && event.target.name.startsWith('q')) {
+             function handleAnswerChange(event) { /* (No changes needed here) */
+                if (event.target.type === 'radio' && event.target.name.startsWith('q')) {
                     const questionId = parseInt(event.target.name.substring(1));
-                    const score = parseInt(event.target.value);
-                    userAnswers[questionId] = score;
-                    // console.log(`Answered Q${questionId} with ${score}`); // For debugging
-                 }
-             }
+                    userAnswers[questionId] = parseInt(event.target.value);
+                }
+            }
 
-
-             function saveCurrentPageAnswers() {
-                 // Validation logic can be added here if needed before next/prev
+             function saveCurrentPageAnswers() { /* (No changes needed here) */
+                 let allAnsweredOnPage = true;
                  const start = currentQuestionIndex;
                  const end = Math.min(start + questionsPerPage, questions.length);
-                 for (let i = start; i < end; i++) {
-                     const qId = questions[i].id;
-                     const radioSelected = questionContainer.querySelector(`input[name="q${qId}"]:checked`);
-                     if (radioSelected) {
-                         userAnswers[qId] = parseInt(radioSelected.value);
-                     } else {
-                          // Optionally handle unanswered questions on the current page
-                         // console.warn(`Question ${qId} on current page not answered`);
-                     }
-                 }
-                 // Simple validation: check if all questions on *this* page are answered
-                 let allAnsweredOnPage = true;
                  for (let i = start; i < end; i++) {
                      if (!userAnswers[questions[i].id]) {
                          allAnsweredOnPage = false;
                          break;
                      }
                  }
-                 return allAnsweredOnPage; // Return true if all answered, false otherwise
+                 return allAnsweredOnPage;
              }
 
-
-             function nextQuestions() {
-                 // Optional Strict Validation: Check if all on *current* page are answered
-                 // if (!saveCurrentPageAnswers()) {
-                 //     alert("Veuillez répondre à toutes les questions sur cette page avant de continuer.");
-                 //     return;
-                 // }
-                 // Less strict: just saves whatever is answered and proceeds
-                 saveCurrentPageAnswers(); // Ensure current answers are saved
-
+             function nextQuestions() { /* (No changes needed here) */
+                 saveCurrentPageAnswers(); // Save answers on page
                  currentQuestionIndex += questionsPerPage;
-                if (currentQuestionIndex >= questions.length) {
-                     // This case should ideally be handled by the finish button visibility
-                     calculateResults();
-                } else {
-                    displayCurrentQuestions();
-                    updateProgress();
-                }
-            }
+                 if (currentQuestionIndex >= questions.length) calculateResults();
+                 else { displayCurrentQuestions(); updateProgress(); }
+             }
 
-            function previousQuestions() {
-                saveCurrentPageAnswers(); // Save answers even when going back
+             function previousQuestions() { /* (No changes needed here) */
+                 saveCurrentPageAnswers();
+                 currentQuestionIndex -= questionsPerPage;
+                 if (currentQuestionIndex < 0) currentQuestionIndex = 0;
+                 displayCurrentQuestions(); updateProgress();
+             }
 
-                currentQuestionIndex -= questionsPerPage;
-                if (currentQuestionIndex < 0) {
-                    currentQuestionIndex = 0; // Should not happen if button is disabled
-                }
-                displayCurrentQuestions();
-                updateProgress();
-            }
-
-             function updateNavigationButtons() {
+             function updateNavigationButtons() { /* (No changes needed here) */
                  prevBtn.disabled = currentQuestionIndex === 0;
-
                  const isLastPage = (currentQuestionIndex + questionsPerPage) >= questions.length;
                  nextBtn.style.display = isLastPage ? 'none' : 'inline-block';
                  finishBtn.style.display = isLastPage ? 'inline-block' : 'none';
              }
 
-
-            function updateProgress() {
-                 // Calculate progress based on the *start* of the current page
-                 const progressPercentage = Math.min(100, (currentQuestionIndex / questions.length) * 100);
+             function updateProgress() { /* (No changes needed here) */
+                 const progressPercentage = Math.min(100, ((currentQuestionIndex + questionsPerPage) / questions.length) * 100); // Progress based on *next* page start
                  progressBar.style.width = `${progressPercentage}%`;
-            }
-
-            function calculateResults() {
-                // Ensure final page answers are saved
-                if (!saveCurrentPageAnswers()) {
-                     alert("Veuillez répondre à toutes les questions de la dernière page.");
-                     return; // Stop calculation if last page isn't complete
-                 }
-
-                scores = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0 };
-                let answeredQuestionsCount = 0;
-
-                for (const q of questions) {
-                    if (userAnswers[q.id] !== undefined && userAnswers[q.id] !== null) { // Check if answer exists
-                         scores[q.type] += userAnswers[q.id];
-                        answeredQuestionsCount++;
-                     } else {
-                        console.warn(`Question ${q.id} non répondue - non incluse dans le score.`);
-                     }
-                }
-
-                 // Check if enough questions were answered overall
-                 // Example threshold: must answer at least 1 question per type on average? Or 80% total?
-                if (answeredQuestionsCount < questions.length * 0.8) {
-                    alert("Vous n'avez pas répondu à suffisamment de questions pour un résultat fiable. Veuillez répondre à plus de questions et terminer.");
-                     // Maybe go back to the first unanswered question page? Or just stay here.
-                    return; // Stop before displaying potentially misleading results
-                }
-
-
-                // Find main type (highest score)
-                 let mainType = -1;
-                 let maxScore = -1;
-                 let tiedTypes = []; // To handle ties
-
-                 for (const type in scores) {
-                     if (scores[type] > maxScore) {
-                         maxScore = scores[type];
-                         mainType = parseInt(type);
-                         tiedTypes = [mainType]; // Reset ties, new highest
-                     } else if (scores[type] === maxScore) {
-                         tiedTypes.push(parseInt(type)); // Add to ties
-                     }
-                 }
-
-                 // If tied, maybe indicate it? For now, keep the first one found as mainType.
-                 if (tiedTypes.length > 1) {
-                     console.log("Égalité pour le score maximum entre les types :", tiedTypes);
-                     // Simple approach: keep the first one `mainType` determined above.
-                     // Alternative: list all tied types as potential main types.
-                 }
-
-
-                 // Determine wings
-                let wings = [];
-                if (mainType !== -1) {
-                    const wing1Type = mainType === 1 ? 9 : mainType - 1;
-                    const wing2Type = mainType === 9 ? 1 : mainType + 1;
-                    const wing1Score = scores[wing1Type] || 0;
-                    const wing2Score = scores[wing2Type] || 0;
-
-                    // More nuanced wing logic: Check adjacent scores relative to maxScore
-                    const wingThreshold = maxScore * 0.65; // Wing score should be at least 65% of main score (example)
-
-                    if (wing1Score >= wingThreshold && wing1Score > wing2Score) {
-                         wings.push(wing1Type);
-                    } else if (wing2Score >= wingThreshold && wing2Score > wing1Score) {
-                         wings.push(wing2Type);
-                    } else if (wing1Score >= wingThreshold && wing2Score >= wingThreshold) {
-                        // If both are strong enough, mention both or the stronger one? Let's list both if close.
-                        if (Math.abs(wing1Score - wing2Score) <= 2) { // If scores are very close (e.g., difference <= 2 points)
-                            wings.push(wing1Type);
-                            wings.push(wing2Type);
-                        } else if (wing1Score > wing2Score) { // Otherwise, take the stronger one if threshold met
-                             wings.push(wing1Type);
-                         } else {
-                             wings.push(wing2Type);
-                         }
-                     }
-                     // If no wing meets threshold, wings array remains empty.
-                }
-
-                 userResult = { mainType, wings, scores, tiedTypes }; // Include tiedTypes info
-                 saveToLocalStorage();
-                 displayResults();
-            }
-
-             function saveToLocalStorage() {
-                 if (userResult) {
-                    try {
-                        localStorage.setItem('enneagramResult', JSON.stringify(userResult));
-                    } catch (e) {
-                        console.error("Failed to save to localStorage", e);
-                        alert("Impossible de sauvegarder les résultats dans le stockage local. Votre navigateur est peut-être en mode privé ou le stockage est plein.");
-                    }
-                 }
              }
 
-             function loadFromLocalStorage() {
-                 try {
-                     const savedResult = localStorage.getItem('enneagramResult');
-                     if (savedResult) {
-                         userResult = JSON.parse(savedResult);
-                         // Basic validation of loaded data
-                         if (userResult && userResult.mainType && userResult.scores) {
-                             return true;
-                         } else {
-                             console.error("Données sauvegardées invalides.");
-                             localStorage.removeItem('enneagramResult');
-                             return false;
-                         }
-                     }
-                 } catch (e) {
-                    console.error("Failed to load or parse from localStorage", e);
-                    localStorage.removeItem('enneagramResult'); // Clear corrupted data
+             function calculateResults() { /* (Keep improved version from previous step) */
+                if (!saveCurrentPageAnswers()) {
+                     alert("Veuillez répondre à toutes les questions de la dernière page.");
+                     return;
+                 }
+                scores = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0 };
+                let answeredQuestionsCount = 0;
+                for (const q of questions) {
+                    if (userAnswers[q.id] !== undefined && userAnswers[q.id] !== null) {
+                         scores[q.type] += userAnswers[q.id];
+                        answeredQuestionsCount++;
+                     } else { console.warn(`Q ${q.id} non répondue.`); }
                 }
-                 return false;
+                if (answeredQuestionsCount < questions.length * 0.8) {
+                    alert("Pas assez de réponses pour un résultat fiable."); return;
+                }
+                let mainType = -1, maxScore = -1, tiedTypes = [];
+                for (const type in scores) {
+                    if (scores[type] > maxScore) { maxScore = scores[type]; mainType = parseInt(type); tiedTypes = [mainType]; }
+                    else if (scores[type] === maxScore) { tiedTypes.push(parseInt(type)); }
+                }
+                let wings = [];
+                if (mainType !== -1) {
+                    const w1Type = mainType === 1 ? 9 : mainType - 1, w2Type = mainType === 9 ? 1 : mainType + 1;
+                    const w1Score = scores[w1Type] || 0, w2Score = scores[w2Type] || 0;
+                    const threshold = maxScore * 0.65;
+                    if (w1Score >= threshold && w1Score > w2Score) wings.push(w1Type);
+                    else if (w2Score >= threshold && w2Score > w1Score) wings.push(w2Type);
+                    else if (w1Score >= threshold && w2Score >= threshold) {
+                        if (Math.abs(w1Score - w2Score) <= 2) { wings.push(w1Type); wings.push(w2Type); }
+                        else if (w1Score > w2Score) wings.push(w1Type); else wings.push(w2Type);
+                    }
+                }
+                userResult = { mainType, wings, scores, tiedTypes };
+                saveToLocalStorage();
+                displayResults();
+             }
+
+             function saveToLocalStorage() { /* (No changes needed) */
+                 if (userResult) { try { localStorage.setItem('enneagramResult', JSON.stringify(userResult)); } catch (e) { console.error("LS Save Fail", e); } }
+             }
+             function loadFromLocalStorage() { /* (No changes needed) */
+                 try {
+                     const saved = localStorage.getItem('enneagramResult');
+                     if (saved) { userResult = JSON.parse(saved); return userResult && userResult.mainType && userResult.scores; }
+                 } catch (e) { console.error("LS Load Fail", e); localStorage.removeItem('enneagramResult'); } return false;
              }
 
 
             // --- Results Functions ---
-            // === MODIFICATION/AJOUT : Correction de l'affichage du graphique ===
-             function displayResults() {
-                 if (!userResult) return;
+            function displayResults() { /* (Keep improved version) */
+                if (!userResult) return;
+                 const { mainType, wings, scores, tiedTypes } = userResult;
+                const resultSummaryH2 = document.querySelector('#results-summary h2');
 
-                 const { mainType, wings, scores, tiedTypes } = userResult; // Destructure including tiedTypes
-
-                 if (mainType !== -1) {
-                     let mainTypeDisplay = `${enneagramData[mainType].name} (${mainType})`;
-                     if (tiedTypes && tiedTypes.length > 1 && tiedTypes.includes(mainType)) {
-                         const otherTied = tiedTypes.filter(t => t !== mainType);
-                         mainTypeDisplay += ` (Égalité possible avec type(s) ${otherTied.join(', ')})`;
-                     }
-                     mainTypeNameSpan.innerHTML = enneagramData[mainType].name; // Use innerHTML if needed later
-                     mainTypeNumberSpan.textContent = mainType;
-                     mainTypeNameSpan.className = `type-color-${mainType}`; // Add color class
+                if (mainType !== -1) {
+                     let typeName = enneagramData[mainType].name;
+                     let typeNumber = mainType;
+                     resultSummaryH2.innerHTML = `Votre type principal probable : <span class="type-text-${mainType}" style="font-weight: 700;">${typeName}</span> (${typeNumber})${tiedTypes && tiedTypes.length > 1 ? ` <small style="color:var(--text-muted-color);">(Égalité possible avec ${tiedTypes.filter(t=>t!==mainType).join(', ')})</small>` : ''}`;
 
                      let wingsText = "Aile(s) potentielle(s) : ";
-                     if (wings.length > 0) {
-                         wingsText += wings.map(w => `${w} (${enneagramData[w].name})`).join(' et ');
-                     } else {
-                        // Suggest considering adjacent types even if not strong wings
-                        const wing1Type = mainType === 1 ? 9 : mainType - 1;
-                        const wing2Type = mainType === 9 ? 1 : mainType + 1;
-                        wingsText = `Considérez les influences des types adjacents ${wing1Type} et ${wing2Type}. (Ailes non marquées)`;
-                    }
+                     if (wings.length > 0) wingsText += wings.map(w => `${w} (${enneagramData[w].name})`).join(' et ');
+                     else { const w1 = mainType === 1 ? 9 : mainType - 1, w2 = mainType === 9 ? 1 : mainType + 1; wingsText = `Considérez influences des types ${w1} et ${w2}. (Ailes non marquées)`; }
                      wingsInfoP.textContent = wingsText;
-
-                     // Update the main title h2 to include tie info
-                     const resultTitleH2 = document.querySelector('#results-summary h2');
-                     if(resultTitleH2) resultTitleH2.innerHTML = `Votre type principal probable : <span id="main-type-name" class="type-color-${mainType}">${enneagramData[mainType].name}</span> (<span id="main-type-number">${mainType}</span>)${tiedTypes && tiedTypes.length > 1 ? ` <small>(Égalité possible avec ${tiedTypes.filter(t=>t!==mainType).join(', ')})</small>` : ''}`;
-
-
-                     viewDetailsBtn.onclick = () => displayTypeDetails(mainType);
-                     viewDetailsBtn.disabled = false;
+                     viewDetailsBtn.onclick = () => displayTypeDetails(mainType); viewDetailsBtn.disabled = false;
                  } else {
-                     // Handle case where no main type could be determined (e.g., insufficient answers)
-                     mainTypeNameSpan.textContent = "Indéterminé";
-                     mainTypeNumberSpan.textContent = "?";
-                     wingsInfoP.textContent = "Impossible de déterminer le type principal. Veuillez répondre à plus de questions.";
-                     viewDetailsBtn.disabled = true;
-                     const resultTitleH2 = document.querySelector('#results-summary h2');
-                      if(resultTitleH2) resultTitleH2.innerHTML = `Votre type principal probable : <span id="main-type-name">Indéterminé</span> (<span id="main-type-number">?</span>)`;
-
+                     resultSummaryH2.innerHTML = `Votre type principal probable : <span id="main-type-name">Indéterminé</span> (<span id="main-type-number">?</span>)`;
+                     wingsInfoP.textContent = "Impossible de déterminer. Veuillez répondre à plus de questions."; viewDetailsBtn.disabled = true;
                  }
 
-                 // Display Chart
-                 resultsChartDiv.innerHTML = ''; // Clear previous chart
+                 resultsChartDiv.innerHTML = '';
                  let maxScoreValue = 0;
-                 for (const type in scores) {
-                      const numericScore = Number(scores[type] || 0);
-                      if (!isNaN(numericScore) && numericScore > maxScoreValue) {
-                          maxScoreValue = numericScore;
-                      }
-                 }
-                  // Ensure maxScoreValue is at least 1 to avoid division by zero or negative heights
-                 if (maxScoreValue <= 0) maxScoreValue = 1; // Prevents issues if all scores are 0 or negative (unlikely)
-
-
+                 for (const type in scores) { const numScore = Number(scores[type] || 0); if (!isNaN(numScore) && numScore > maxScoreValue) maxScoreValue = numScore; }
+                 if (maxScoreValue <= 0) maxScoreValue = 1;
                  for (let i = 1; i <= 9; i++) {
-                     const score = scores[i] || 0;
-                     const numericScore = Number(score);
-                     if (isNaN(numericScore)) {
-                         console.error(`Score invalide pour le graphique du type ${i}:`, score);
-                         continue; // Skip bar if score is not a valid number
-                     }
-
-                     // Calculate height, ensure it's non-negative and max 100%
-                     const barHeight = Math.max(0, Math.min(100, (numericScore / maxScoreValue) * 100));
-
-                     // console.log(`Barre ${i}: Score=${numericScore}, Hauteur=${barHeight}%`); // DEBUG
-
-                     const barContainer = document.createElement('div');
-                     barContainer.classList.add('chart-bar-container');
-
-                     const bar = document.createElement('div');
-                     bar.classList.add('chart-bar');
-                     // ---=== AJOUT/CORRECTION ESSENTIELLE ===---
-                     bar.classList.add(`type-bg-${i}`); // Apply type-specific background color class
-                     bar.style.height = `${barHeight}%`; // Apply calculated height
-                     bar.setAttribute('data-score', numericScore); // Set score for tooltip
-                     // ---=== FIN AJOUT/CORRECTION ===---
-
-                     const label = document.createElement('div');
-                     label.classList.add('chart-label');
-                     label.textContent = i;
-
-                     barContainer.appendChild(bar);
-                     barContainer.appendChild(label);
-                     resultsChartDiv.appendChild(barContainer);
+                     const score = scores[i] || 0; const numScore = Number(score); if (isNaN(numScore)) continue;
+                     const barHeight = Math.max(0, Math.min(100, (numScore / maxScoreValue) * 100));
+                     const barContainer = document.createElement('div'); barContainer.className = 'chart-bar-container';
+                     const bar = document.createElement('div'); bar.className = `chart-bar type-bg-${i}`; bar.style.height = `${barHeight}%`; bar.dataset.score = numScore;
+                     const label = document.createElement('div'); label.className = 'chart-label'; label.textContent = i;
+                     barContainer.append(bar, label); resultsChartDiv.appendChild(barContainer);
                  }
-
-
                  showView('results');
             }
-             // === FIN MODIFICATION/AJOUT ===
 
-
-             function resetTestAndShowHome() {
-                 userResult = null;
-                 userAnswers = {};
-                 scores = {};
+             function resetTestAndShowHome() { /* (No changes needed) */
+                 userResult = null; userAnswers = {}; scores = {};
                  localStorage.removeItem('enneagramResult');
                  savedResultInfo.style.display = 'none';
+                 navigationHistory = ['home']; // Reset history
                  showView('home');
              }
 
 
             // --- Types Functions ---
             function populateTypeSelection() {
-                typeSelectionDiv.innerHTML = ''; // Clear existing buttons
-                for (let i = 1; i <= 9; i++) {
-                    const type = enneagramData[i];
-                    const button = document.createElement('button');
-                    button.innerHTML = `${type.icon || i}`; // Use icon if available, else number
-                    button.title = type.name; // Tooltip with name
-                    button.classList.add('type-button', 'outline', `type-color-${i}`); // Add base and color classes
-                    button.onclick = () => displayTypeDetails(i);
-                    typeSelectionDiv.appendChild(button);
-                }
-            }
+                 typeSelectionDiv.innerHTML = '';
+                 for (let i = 1; i <= 9; i++) {
+                     const type = enneagramData[i];
+                     const button = document.createElement('button');
+                     button.innerHTML = `${type.icon || i}`; button.title = type.name;
+                     button.className = `type-button outline type-color-${i}`; // Add classes
+                     button.onclick = () => displayTypeDetails(i);
+                     typeSelectionDiv.appendChild(button);
+                 }
+                  // Ensure details are hidden when first populating
+                 typeDetailContentDiv.style.display = 'none';
+                 // Reset selected state
+                 clearSelectedTypeButton();
+             }
+
+             function clearSelectedTypeButton() {
+                 typeSelectionDiv.querySelectorAll('.type-button.selected').forEach(btn => btn.classList.remove('selected'));
+             }
 
             function displayTypeDetails(typeNumber) {
-                const type = enneagramData[typeNumber];
-                if (!type) return;
+                const type = enneagramData[typeNumber]; if (!type) return;
 
-                 // Use H4 for sub-sections now
-                typeDetailContentDiv.innerHTML = `
-                    <h3>${type.icon} ${type.name} (Type ${typeNumber})</h3>
-                    <div class="type-detail-section">
-                        <h4>Description Générale</h4>
-                        <p>${type.description}</p>
-                    </div>
-                    <div class="type-detail-section">
-                        <h4>Forces et Talents</h4>
-                        <p>${type.strengths}</p>
-                    </div>
-                    <div class="type-detail-section">
-                        <h4>Défis et Points de Vigilance</h4>
-                        <p>${type.weaknesses}</p>
-                    </div>
-                    <div class="type-detail-section">
-                        <h4>Motivations Profondes et Peurs</h4>
-                        <p><strong>Motivation:</strong> ${type.motivation}<br><strong>Peur:</strong> ${type.fear}</p>
-                    </div>
-                    <div class="type-detail-section">
-                        <h4>Comportements (Stress/Sécurité)</h4>
-                        <p><strong>Sous Stress (Désintégration) <i title="Tendance vers les aspects moins sains de ce type">➔</i> ${type.stress.match(/\d+/)?.[0] || ''} :</strong> ${type.stress}</p>
-                        <p><strong>En Sécurité (Intégration) <i title="Tendance vers les aspects plus sains de ce type">➔</i> ${type.security.match(/\d+/)?.[0] || ''} :</strong> ${type.security}</p>
-                    </div>
+                 // Highlight selected button
+                 clearSelectedTypeButton();
+                 const selectedBtn = typeSelectionDiv.querySelector(`.type-color-${typeNumber}`);
+                 if(selectedBtn) selectedBtn.classList.add('selected');
+
+                 // Add arrows to Stress/Security
+                 const stressTarget = enneagramData[type.growthPath] ? `(${type.growthPath} ${enneagramData[type.growthPath].name})` : '';
+                 const securityTarget = enneagramData[type.securityPath] ? `(${type.securityPath} ${enneagramData[type.securityPath].name})` : '';
+
+                 typeDetailContentDiv.innerHTML = `
+                     <h3 class="type-text-${typeNumber}">${type.icon} ${type.name} (Type ${typeNumber})</h3>
+                     <div class="type-detail-section"><h4>Description Générale</h4><p>${type.description}</p></div>
+                     <div class="type-detail-section"><h4>Forces et Talents</h4><p>${type.strengths}</p></div>
+                     <div class="type-detail-section"><h4>Défis et Points de Vigilance</h4><p>${type.weaknesses}</p></div>
+                     <div class="type-detail-section"><h4>Motivations Profondes et Peurs</h4><p><strong>Motivation:</strong> ${type.motivation}<br><strong>Peur:</strong> ${type.fear}</p></div>
                      <div class="type-detail-section">
-                        <h4>Chemins de Croissance Personnelle</h4>
-                        <p>${type.growth}</p>
+                        <h4>Dynamiques (Stress/Sécurité)</h4>
+                        <p><strong>Stress (Désintégration) <span style="color: var(--danger-color)">➔</span> ${stressTarget}:</strong> ${type.stress}</p>
+                        <p><strong>Sécurité (Intégration) <span style="color: var(--success-color)">➔</span> ${securityTarget}:</strong> ${type.security}</p>
                     </div>
-                     <div class="type-detail-section">
-                        <h4>Conseils Pratiques</h4>
-                        <p>${type.tips || "Conseils spécifiques à venir."}</p>
-                    </div>
-                `;
-                 // Apply color to the main title
-                 const titleH3 = typeDetailContentDiv.querySelector('h3');
-                 if(titleH3) {
-                     titleH3.className = ''; // Clear previous classes
-                     titleH3.classList.add(`type-color-${typeNumber}`); // Add the correct color class
-                 }
+                     <div class="type-detail-section"><h4>Chemins de Croissance</h4><p>${type.growth}</p></div>
+                     <div class="type-detail-section"><h4>Conseils Pratiques</h4><p>${type.tips || "Conseils spécifiques à venir."}</p></div>
+                     <div id="hide-details-btn-container">
+                          <button id="hide-details-btn" class="outline">Retour à la sélection</button>
+                     </div>
+                 `;
+                 // Re-add event listener for the new button
+                 document.getElementById('hide-details-btn').addEventListener('click', hideTypeDetails);
 
 
-                typeDetailContentDiv.style.display = 'block';
+                 // Apply colored border using class
+                 typeDetailContentDiv.className = ''; // Clear previous border classes
+                 typeDetailContentDiv.classList.add(`type-border-${typeNumber}`);
 
-                 // If not already in types view, switch to it
-                 if (currentView !== 'types') {
-                    showView('types');
-                 } else {
-                      // If already in types view, just scroll to the details
-                      typeDetailContentDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                 }
-            }
+                 typeDetailContentDiv.style.display = 'block';
+                 // Scroll into view smoothly
+                  typeDetailContentDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+                 // Ensure the main view remains 'types'
+                 if (currentView !== 'types') { showView('types'); }
+             }
+
+             // === AJOUT : Function to hide details within the types view ===
+             function hideTypeDetails() {
+                 typeDetailContentDiv.style.display = 'none';
+                 clearSelectedTypeButton(); // Unselect the button
+                 // Optional: scroll back to the selection area
+                  typeSelectionDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+             }
+             // === FIN AJOUT ===
 
 
              // --- Comparison Functions ---
-             function populateComparisonSelectors() {
-                 compareType1Select.innerHTML = '<option value="">Choisir Type 1</option>';
-                 compareType2Select.innerHTML = '<option value="">Choisir Type 2</option>';
-                 for (let i = 1; i <= 9; i++) {
-                     const option1 = document.createElement('option');
-                     option1.value = i;
-                     option1.textContent = `Type ${i}: ${enneagramData[i].name}`;
-                     compareType1Select.appendChild(option1);
-
-                     const option2 = document.createElement('option');
-                     option2.value = i;
-                     option2.textContent = `Type ${i}: ${enneagramData[i].name}`;
-                     compareType2Select.appendChild(option2);
-                 }
-             }
-
-             function compareTypes() {
-                 const type1 = compareType1Select.value;
-                 const type2 = compareType2Select.value;
-
-                 if (!type1 || !type2) {
-                     comparisonResultDiv.innerHTML = "<p style='color: var(--danger-color);'>Veuillez sélectionner deux types à comparer.</p>";
-                     return;
-                 }
-                 if (type1 === type2) {
-                    // Use the specific text for same-type comparison if available
-                    const key = `${type1}-${type1}`;
-                    const dynamic = relationshipMatrix[key] || "Comparer un type avec lui-même ? Dynamique : Partage des mêmes motivations et peurs fondamentales. Peut conduire à une grande compréhension ou à l'amplification des défis du type.";
-                    comparisonResultDiv.innerHTML = `<h4>Dynamique Type ${type1} et Type ${type1}</h4><p>${dynamic}</p><p><em>Note : Aperçu simplifié.</em></p>`;
-                    return;
-                 }
-
-                 // Ensure consistent key order (e.g., "1-7" not "7-1")
-                 const typeNum1 = parseInt(type1);
-                 const typeNum2 = parseInt(type2);
-                 const key = `${Math.min(typeNum1, typeNum2)}-${Math.max(typeNum1, typeNum2)}`;
-                 const dynamic = relationshipMatrix[key]; // Use the enriched matrix
-
-                 if (dynamic) {
-                    comparisonResultDiv.innerHTML = `<h4>Dynamique Type ${type1} (${enneagramData[type1].name}) et Type ${type2} (${enneagramData[type2].name})</h4><p>${dynamic}</p><p><em>Note : Ceci est un aperçu simplifié. Les relations réelles sont complexes et dépendent des individus, de leur niveau de conscience et de leur volonté de croissance.</em></p>`;
-                } else {
-                    // This fallback should be less frequent now
-                    comparisonResultDiv.innerHTML = `<p>La dynamique spécifique entre le Type ${type1} et le Type ${type2} n'est pas encore détaillée ici. En général, tous les types peuvent avoir des relations positives en développant la conscience de soi et l'empathie mutuelle.</p>`;
-                 }
-             }
+            function populateComparisonSelectors() { /* (No changes needed) */
+                compareType1Select.innerHTML = '<option value="">Choisir Type 1</option>';
+                compareType2Select.innerHTML = '<option value="">Choisir Type 2</option>';
+                for (let i = 1; i <= 9; i++) {
+                    const opt1 = document.createElement('option'); opt1.value = i; opt1.textContent = `Type ${i}: ${enneagramData[i].name}`; compareType1Select.appendChild(opt1);
+                    const opt2 = document.createElement('option'); opt2.value = i; opt2.textContent = `Type ${i}: ${enneagramData[i].name}`; compareType2Select.appendChild(opt2);
+                }
+            }
+            function compareTypes() { /* (No changes needed) */
+                const t1 = compareType1Select.value, t2 = compareType2Select.value;
+                if (!t1 || !t2) { comparisonResultDiv.innerHTML = "<p style='color: var(--danger-color); text-align:center;'>Veuillez sélectionner deux types.</p>"; return; }
+                const key = t1 === t2 ? `${t1}-${t1}` : `${Math.min(t1, t2)}-${Math.max(t1, t2)}`;
+                const dynamic = relationshipMatrix[key];
+                if (dynamic) {
+                    comparisonResultDiv.innerHTML = `<h4>Dynamique Type ${t1} & Type ${t2}</h4><p>${dynamic}</p><p><em>Note : Aperçu simplifié. Les relations réelles sont complexes.</em></p>`;
+                } else { comparisonResultDiv.innerHTML = `<p>Dynamique spécifique Type ${t1} & Type ${t2} non détaillée.</p>`; }
+            }
 
             // ---=== INITIALIZATION ===---
             function init() {
-                 // Check for saved result
                  if (loadFromLocalStorage()) {
                      savedResultInfo.style.display = 'block';
-                     showSavedResultBtn.onclick = () => displayResults(); // Directly call displayResults
-                 } else {
-                     savedResultInfo.style.display = 'none';
-                 }
+                     showSavedResultBtn.onclick = () => displayResults();
+                     clearSavedResultBtn.onclick = () => {
+                         if (confirm("Voulez-vous vraiment effacer votre résultat sauvegardé ?")) {
+                             localStorage.removeItem('enneagramResult');
+                             savedResultInfo.style.display = 'none';
+                             userResult = null; // Clear in memory too
+                         }
+                     };
+                 } else { savedResultInfo.style.display = 'none'; }
 
                  // Setup Event Listeners
                  startTestBtn.addEventListener('click', startTest);
-                 viewTypesBtn.addEventListener('click', () => {
-                     populateTypeSelection(); // Ensure buttons are there
-                     typeDetailContentDiv.style.display = 'none'; // Hide details initially
-                     showView('types');
-                 });
-                 viewComparisonBtn.addEventListener('click', () => {
-                     populateComparisonSelectors();
-                     comparisonResultDiv.innerHTML = ''; // Clear previous results
-                     showView('comparison');
-                 });
-
+                 viewTypesBtn.addEventListener('click', () => { populateTypeSelection(); showView('types'); });
+                 viewComparisonBtn.addEventListener('click', () => { populateComparisonSelectors(); comparisonResultDiv.innerHTML = ''; showView('comparison'); });
                  prevBtn.addEventListener('click', previousQuestions);
                  nextBtn.addEventListener('click', nextQuestions);
                  finishBtn.addEventListener('click', calculateResults);
-
                  compareBtn.addEventListener('click', compareTypes);
 
-                 // Initial View (already set to 'home' by default in HTML)
-                 // showView('home'); // No need to call it again, handled by class="active"
+                 // === MODIFICATION : Setup specific back buttons ===
+                 typesBackBtn.addEventListener('click', goBack);
+                 // Comparison back button onclick is set directly to showView('home') in HTML
+                 // Type details back button (hide-details-btn) listener is added dynamically in displayTypeDetails
+
+                 // Initial View (handled by class="active" in HTML)
+                 currentViewTarget = document.querySelector('.view.active');
+                 if(!currentViewTarget) showView('home'); // Fallback if no active class initially
             }
 
             // ---=== START THE APP ===---
             init();
-
-        }); // End of DOMContentLoaded
+        });
     </script>
 </body>
 </html>
