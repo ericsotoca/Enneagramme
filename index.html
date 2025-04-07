@@ -23,10 +23,10 @@
             --type3-color: #5cb85c;
             --type4-color: #5bc0de;
             --type5-color: #0275d8;
-            --type6-color: #292b2c;
+            --type6-color: #292b2c; /* Dark color for type 6 */
             --type7-color: #f7e14f;
-            --type8-color: #8d6e63;
-            --type9-color: #a1887f;
+            --type8-color: #8d6e63; /* Brownish for type 8 */
+            --type9-color: #a1887f; /* Lighter brownish for type 9 */
         }
 
         * {
@@ -65,6 +65,13 @@
             color: var(--dark-gray);
             margin-top: 1.5rem;
         }
+        h4 { /* Added for sub-sections */
+             color: var(--secondary-color);
+             margin-top: 1rem;
+             margin-bottom: 0.5rem;
+             padding-bottom: 0.2rem;
+             border-bottom: 1px solid var(--light-gray);
+         }
 
         p {
             margin-bottom: 1rem;
@@ -93,7 +100,7 @@
         button.secondary:hover {
             background-color: #d48f1c;
         }
-        
+
         button.outline {
             background-color: transparent;
             color: var(--primary-color);
@@ -216,48 +223,55 @@
         #results-chart {
             display: flex;
             justify-content: space-around;
-            align-items: flex-end;
+            align-items: flex-end; /* Align bars at the bottom */
             height: 200px;
             border-bottom: 1px solid var(--medium-gray);
             padding-bottom: 10px;
             margin-bottom: 2rem;
+            position: relative; /* Needed for absolute positioning inside if any */
         }
         .chart-bar-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 8%; /* Ajusté pour 9 barres + espacement */
+            width: 8%; /* Adjusted for 9 bars + espacement */
             text-align: center;
+            height: 100%; /* Container takes full height */
+            justify-content: flex-end; /* Aligns bar and label to bottom */
         }
         .chart-bar {
             width: 100%;
-            background-color: var(--primary-color);
+            /* background-color: var(--primary-color); Default color, overridden by specific type */
             transition: height 0.5s ease-out;
             border-radius: 3px 3px 0 0;
             position: relative; /* Pour le tooltip */
+            margin-bottom: 5px; /* Space between bar and label */
         }
         .chart-bar::after { /* Tooltip pour score */
             content: attr(data-score);
             position: absolute;
-            top: -20px;
+            top: -22px; /* Adjusted position */
             left: 50%;
             transform: translateX(-50%);
-            background: var(--dark-gray);
+            background: rgba(0, 0, 0, 0.7); /* Darker tooltip */
             color: white;
-            padding: 2px 5px;
+            padding: 3px 6px;
             border-radius: 3px;
             font-size: 0.75rem;
             white-space: nowrap;
             opacity: 0;
-            transition: opacity 0.2s;
+            visibility: hidden; /* Hide completely when not hovered */
+            transition: opacity 0.2s, visibility 0.2s;
+            z-index: 10;
         }
         .chart-bar:hover::after {
             opacity: 1;
+            visibility: visible; /* Show on hover */
         }
 
         .chart-label {
-            margin-top: 5px;
-            font-size: 0.8rem;
+            /* margin-top: 5px; Removed, handled by container */
+            font-size: 0.85rem; /* Slightly larger label */
             color: var(--dark-gray);
         }
         #results-actions {
@@ -290,12 +304,8 @@
         .type-detail-section {
             margin-bottom: 1rem;
         }
-        .type-detail-section h4 {
-            color: var(--secondary-color);
-            margin-bottom: 0.5rem;
-            border-bottom: 1px solid var(--light-gray);
-            padding-bottom: 0.2rem;
-        }
+        /* Using H4 style defined globally now */
+        /* .type-detail-section h4 { ... } */
 
         /* --- Comparison --- */
         #comparison-selectors {
@@ -337,14 +347,19 @@
             button { padding: 8px 15px; font-size: 0.9rem; }
 
             #results-chart {
-                height: 150px;
+                height: 180px; /* Adjusted height */
             }
              .chart-bar-container {
                  width: 10%; /* Ajustement pour petit écran */
              }
             .chart-label {
-                 font-size: 0.7rem;
+                 font-size: 0.75rem; /* Adjusted label size */
              }
+            .chart-bar::after { /* Adjust tooltip position on mobile if needed */
+                top: -20px;
+                font-size: 0.7rem;
+            }
+
 
             #comparison-selectors {
                 flex-direction: column;
@@ -357,6 +372,7 @@
         }
 
         /* Type specific colors */
+        /* Classes for text/border color */
         .type-color-1 { color: var(--type1-color); border-color: var(--type1-color); }
         .type-color-2 { color: var(--type2-color); border-color: var(--type2-color); }
         .type-color-3 { color: var(--type3-color); border-color: var(--type3-color); }
@@ -367,6 +383,7 @@
         .type-color-8 { color: var(--type8-color); border-color: var(--type8-color); }
         .type-color-9 { color: var(--type9-color); border-color: var(--type9-color); }
 
+        /* Classes for background color - important to override defaults */
         .type-bg-1 { background-color: var(--type1-color) !important; }
         .type-bg-2 { background-color: var(--type2-color) !important; }
         .type-bg-3 { background-color: var(--type3-color) !important; }
@@ -430,7 +447,8 @@
 
             <div id="results-actions">
                 <button id="view-details-btn">Voir les détails de mon type</button>
-                <button onclick="showView('types')" class="secondary">Explorer les autres types</button>
+                <!-- === MODIFICATION ICI dans onclick === -->
+                <button onclick="populateTypeSelection(); showView('types');" class="secondary">Explorer les autres types</button>
                 <button onclick="resetTestAndShowHome()" class="outline">Refaire le test</button>
             </div>
         </section>
@@ -481,16 +499,16 @@
 
             // ---=== DATABASE ===---
             const enneagramData = {
-                1: { name: "Le Perfectionniste", color: "var(--type1-color)", icon: "🎯", description: "Principlé, déterminé, contrôlé et perfectionniste.", strengths: "Éthique, fiable, productif, sage, idéaliste.", weaknesses: "Critique, jugement, rigidité, ressentiment.", motivation: "Être bon, avoir raison, être juste.", fear: "Être corrompu, mauvais, défectueux.", stress: "Devient critique et moralisateur (comme un 4 malsain).", security: "Se détend et devient plus spontané (comme un 7 sain).", growth: "Accepter l'imperfection, cultiver la sérénité, développer l'empathie.", tips: "Pratiquer la pleine conscience, célébrer les petites victoires, déléguer." },
-                2: { name: "L'Altruiste", color: "var(--type2-color)", icon: "❤️", description: "Attentionné, généreux, possessif et manipulateur.", strengths: "Aimant, attentionné, généreux, empathique.", weaknesses: "Orgueilleux, dépendant, manipulateur (indirectement).", motivation: "Être aimé, être nécessaire.", fear: "Ne pas être aimé, ne pas être voulu.", stress: "Devient agressif et autoritaire (comme un 8 malsain).", security: "Devient plus conscient de ses propres besoins (comme un 4 sain).", growth: "Reconnaître ses propres besoins, fixer des limites saines, aimer sans attente.", tips: "Tenir un journal de ses besoins, apprendre à dire non, pratiquer l'auto-compassion." },
-                3: { name: "Le Battant", color: "var(--type3-color)", icon: "⭐", description: "Orienté succès, adaptable, excellent, mais vaniteux et superficiel.", strengths: "Ambitieux, efficace, confiant, énergique.", weaknesses: "Compétitif à l'excès, workaholic, vaniteux, peur de l'échec.", motivation: "Être valorisé, admiré, avoir du succès.", fear: "Ne pas avoir de valeur, échouer.", stress: "Se replie et devient apathique (comme un 9 malsain).", security: "Devient plus coopératif et authentique (comme un 6 sain).", growth: "Cultiver l'authenticité, valoriser les relations, ralentir.", tips: "Identifier ses vraies valeurs, passer du temps de qualité sans objectif, pratiquer l'humilité." },
-                4: { name: "Le Romantique", color: "var(--type4-color)", icon: "🎨", description: "Introspectif, expressif, dramatique et réservé.", strengths: "Créatif, sensible, introspectif, authentique.", weaknesses: "Lunatique, mélancolique, auto-absorbé, envieux.", motivation: "Être unique, authentique, compris.", fear: "Ne pas avoir d'identité, être insignifiant.", stress: "Devient trop dépendant et en demande (comme un 2 malsain).", security: "Devient plus objectif et principiel (comme un 1 sain).", growth: "Apprécier le présent, cultiver la gratitude, agir malgré l'humeur.", tips: "Pratiquer la gratitude quotidienne, s'engager dans des actions concrètes, équilibrer émotion et raison." },
-                5: { name: "L'Observateur", color: "var(--type5-color)", icon: "🧠", description: "Perspicace, innovant, secret et isolé.", strengths: "Analytique, curieux, indépendant, objectif.", weaknesses: "Détaché, avare (temps, énergie), isolé, cynique.", motivation: "Être compétent, capable, savoir.", fear: "Être inutile, incapable, envahi.", stress: "Devient hyperactif et dispersé (comme un 7 malsain).", security: "Devient plus confiant et engagé (comme un 8 sain).", growth: "S'engager avec le monde, partager ses ressources, connecter corps et esprit.", tips: "Pratiquer l'incarnation (sport, danse), fixer des limites au temps de recherche, partager ses découvertes." },
-                6: { name: "Le Loyaliste", color: "var(--type6-color)", icon: "🛡️", description: "Engagé, responsable, anxieux et méfiant.", strengths: "Loyal, responsable, travailleur, prévoyant.", weaknesses: "Anxieux, indécis, méfiant, pessimiste.", motivation: "Avoir sécurité et soutien.", fear: "Être sans soutien, abandonné, incapable de survivre seul.", stress: "Devient compétitif et arrogant (comme un 3 malsain).", security: "Devient plus détendu et optimiste (comme un 9 sain).", growth: "Faire confiance à soi-même, gérer l'anxiété, accepter l'incertitude.", tips: "Identifier les scénarios catastrophes vs réalités, pratiquer la prise de décision, chercher des preuves de soutien." },
-                7: { name: "L'Épicurien", color: "var(--type7-color)", icon: "🎉", description: "Occupé, productif, spontané, mais dispersé et excessif.", strengths: "Optimiste, énergique, curieux, spontané.", weaknesses: "Superficiel, impulsif, dispersé, évite la douleur.", motivation: "Être satisfait, content, éviter la souffrance.", fear: "Être privé, piégé dans la souffrance.", stress: "Devient critique et perfectionniste (comme un 1 malsain).", security: "Devient plus concentré et profond (comme un 5 sain).", growth: "Accepter la douleur et l'ennui, s'engager en profondeur, trouver la joie dans le simple.", tips: "Pratiquer la pleine conscience, terminer les projets commencés, explorer les émotions difficiles." },
-                8: { name: "Le Protecteur", color: "var(--type8-color)", icon: "👑", description: "Puissant, dominant, assertif, mais contrôlant et intimidant.", strengths: "Protecteur, décisif, volontaire, énergique.", weaknesses: "Contrôlant, dominateur, insensible, vengeur.", motivation: "Se protéger, contrôler son environnement.", fear: "Être contrôlé, blessé, faible.", stress: "Se retire et devient craintif (comme un 5 malsain).", security: "Devient plus attentionné et ouvert (comme un 2 sain).", growth: "Développer la vulnérabilité, utiliser sa force pour les autres, écouter.", tips: "Pratiquer l'écoute active, reconnaître l'impact de sa force, exprimer sa vulnérabilité dans un cadre sûr." },
-                9: { name: "Le Médiateur", color: "var(--type9-color)", icon: "☮️", description: "Paisible, rassurant, agréable, mais complaisant et têtu.", strengths: "Accommodant, diplomate, patient, stable.", weaknesses: "Procrastinateur, indécis, passif-agressif, têtu.", motivation: "Maintenir la paix intérieure et l'harmonie extérieure.", fear: "Perte, séparation, conflit.", stress: "Devient anxieux et inquiet (comme un 6 malsain).", security: "Devient plus affirmé et orienté objectifs (comme un 3 sain).", growth: "S'affirmer, reconnaître sa propre colère, définir ses priorités.", tips: "Identifier ses propres désirs, pratiquer l'affirmation de soi (petits pas), reconnaître et exprimer la colère de manière saine." }
-            };
+                 1: { name: "Le Perfectionniste", color: "var(--type1-color)", icon: "🎯", description: "Principlé, déterminé, contrôlé et perfectionniste.", strengths: "Éthique, fiable, productif, sage, idéaliste.", weaknesses: "Critique, jugement, rigidité, ressentiment.", motivation: "Être bon, avoir raison, être juste.", fear: "Être corrompu, mauvais, défectueux.", stress: "Devient critique et moralisateur (comme un 4 malsain).", security: "Se détend et devient plus spontané (comme un 7 sain).", growth: "Accepter l'imperfection, cultiver la sérénité, développer l'empathie.", tips: "Pratiquer la pleine conscience, célébrer les petites victoires, déléguer." },
+                 2: { name: "L'Altruiste", color: "var(--type2-color)", icon: "❤️", description: "Attentionné, généreux, possessif et manipulateur.", strengths: "Aimant, attentionné, généreux, empathique.", weaknesses: "Orgueilleux, dépendant, manipulateur (indirectement).", motivation: "Être aimé, être nécessaire.", fear: "Ne pas être aimé, ne pas être voulu.", stress: "Devient agressif et autoritaire (comme un 8 malsain).", security: "Devient plus conscient de ses propres besoins (comme un 4 sain).", growth: "Reconnaître ses propres besoins, fixer des limites saines, aimer sans attente.", tips: "Tenir un journal de ses besoins, apprendre à dire non, pratiquer l'auto-compassion." },
+                 3: { name: "Le Battant", color: "var(--type3-color)", icon: "⭐", description: "Orienté succès, adaptable, excellent, mais vaniteux et superficiel.", strengths: "Ambitieux, efficace, confiant, énergique.", weaknesses: "Compétitif à l'excès, workaholic, vaniteux, peur de l'échec.", motivation: "Être valorisé, admiré, avoir du succès.", fear: "Ne pas avoir de valeur, échouer.", stress: "Se replie et devient apathique (comme un 9 malsain).", security: "Devient plus coopératif et authentique (comme un 6 sain).", growth: "Cultiver l'authenticité, valoriser les relations, ralentir.", tips: "Identifier ses vraies valeurs, passer du temps de qualité sans objectif, pratiquer l'humilité." },
+                 4: { name: "Le Romantique", color: "var(--type4-color)", icon: "🎨", description: "Introspectif, expressif, dramatique et réservé.", strengths: "Créatif, sensible, introspectif, authentique.", weaknesses: "Lunatique, mélancolique, auto-absorbé, envieux.", motivation: "Être unique, authentique, compris.", fear: "Ne pas avoir d'identité, être insignifiant.", stress: "Devient trop dépendant et en demande (comme un 2 malsain).", security: "Devient plus objectif et principiel (comme un 1 sain).", growth: "Apprécier le présent, cultiver la gratitude, agir malgré l'humeur.", tips: "Pratiquer la gratitude quotidienne, s'engager dans des actions concrètes, équilibrer émotion et raison." },
+                 5: { name: "L'Observateur", color: "var(--type5-color)", icon: "🧠", description: "Perspicace, innovant, secret et isolé.", strengths: "Analytique, curieux, indépendant, objectif.", weaknesses: "Détaché, avare (temps, énergie), isolé, cynique.", motivation: "Être compétent, capable, savoir.", fear: "Être inutile, incapable, envahi.", stress: "Devient hyperactif et dispersé (comme un 7 malsain).", security: "Devient plus confiant et engagé (comme un 8 sain).", growth: "S'engager avec le monde, partager ses ressources, connecter corps et esprit.", tips: "Pratiquer l'incarnation (sport, danse), fixer des limites au temps de recherche, partager ses découvertes." },
+                 6: { name: "Le Loyaliste", color: "var(--type6-color)", icon: "🛡️", description: "Engagé, responsable, anxieux et méfiant.", strengths: "Loyal, responsable, travailleur, prévoyant.", weaknesses: "Anxieux, indécis, méfiant, pessimiste.", motivation: "Avoir sécurité et soutien.", fear: "Être sans soutien, abandonné, incapable de survivre seul.", stress: "Devient compétitif et arrogant (comme un 3 malsain).", security: "Devient plus détendu et optimiste (comme un 9 sain).", growth: "Faire confiance à soi-même, gérer l'anxiété, accepter l'incertitude.", tips: "Identifier les scénarios catastrophes vs réalités, pratiquer la prise de décision, chercher des preuves de soutien." },
+                 7: { name: "L'Épicurien", color: "var(--type7-color)", icon: "🎉", description: "Occupé, productif, spontané, mais dispersé et excessif.", strengths: "Optimiste, énergique, curieux, spontané.", weaknesses: "Superficiel, impulsif, dispersé, évite la douleur.", motivation: "Être satisfait, content, éviter la souffrance.", fear: "Être privé, piégé dans la souffrance.", stress: "Devient critique et perfectionniste (comme un 1 malsain).", security: "Devient plus concentré et profond (comme un 5 sain).", growth: "Accepter la douleur et l'ennui, s'engager en profondeur, trouver la joie dans le simple.", tips: "Pratiquer la pleine conscience, terminer les projets commencés, explorer les émotions difficiles." },
+                 8: { name: "Le Protecteur", color: "var(--type8-color)", icon: "👑", description: "Puissant, dominant, assertif, mais contrôlant et intimidant.", strengths: "Protecteur, décisif, volontaire, énergique.", weaknesses: "Contrôlant, dominateur, insensible, vengeur.", motivation: "Se protéger, contrôler son environnement.", fear: "Être contrôlé, blessé, faible.", stress: "Se retire et devient craintif (comme un 5 malsain).", security: "Devient plus attentionné et ouvert (comme un 2 sain).", growth: "Développer la vulnérabilité, utiliser sa force pour les autres, écouter.", tips: "Pratiquer l'écoute active, reconnaître l'impact de sa force, exprimer sa vulnérabilité dans un cadre sûr." },
+                 9: { name: "Le Médiateur", color: "var(--type9-color)", icon: "☮️", description: "Paisible, rassurant, agréable, mais complaisant et têtu.", strengths: "Accommodant, diplomate, patient, stable.", weaknesses: "Procrastinateur, indécis, passif-agressif, têtu.", motivation: "Maintenir la paix intérieure et l'harmonie extérieure.", fear: "Perte, séparation, conflit.", stress: "Devient anxieux et inquiet (comme un 6 malsain).", security: "Devient plus affirmé et orienté objectifs (comme un 3 sain).", growth: "S'affirmer, reconnaître sa propre colère, définir ses priorités.", tips: "Identifier ses propres désirs, pratiquer l'affirmation de soi (petits pas), reconnaître et exprimer la colère de manière saine." }
+             };
 
             // Simplified questions - NEED MORE (45-60) for a real test
              // Structure: { id: number, text: string, type: number (associated enneagram type) }
@@ -534,14 +552,53 @@
                 // Add more questions here... (target 45-60 total)
             ];
 
-             // Simplified relationship dynamics - Needs expert input
+            // === MODIFICATION/AJOUT : Matrice relationnelle enrichie ===
             const relationshipMatrix = {
-                "1-1": "Partage de valeurs, risque de critiques mutuelles.",
-                "1-2": "Le 1 apprécie l'aide du 2, le 2 peut se sentir critiqué.",
-                "1-7": "Complémentaires (structure/fun), mais le 1 peut juger le 7 d'irresponsable.",
-                 "2-8": "Le 2 admire la force du 8, le 8 apprécie le soutien du 2, risque de contrôle.",
-                 "4-9": "Le 4 cherche l'intensité, le 9 la paix ; compréhension mutuelle possible mais nécessite des efforts.",
-                 // Add many more combinations... default message otherwise
+                 "1-1": "Partage de valeurs élevées, discipline mutuelle. Risque de critiques réciproques excessives et de rigidité.",
+                 "1-2": "Le 1 apporte la structure, le 2 la chaleur humaine. Le 1 peut trouver le 2 trop émotif ou indirect, le 2 peut se sentir insuffisamment apprécié ou critiqué par le 1.",
+                 "1-3": "Focalisation sur l'efficacité et l'action. Peuvent être une équipe très productive. Risque de négliger les aspects émotionnels et relationnels.",
+                 "1-4": "Le 1 est pratique, le 4 est idéaliste/émotionnel. Attraction possible par les différences, mais risque d'incompréhension mutuelle (logique vs sentiment).",
+                 "1-5": "Combinaison de rigueur (1) et d'analyse (5). Peuvent collaborer sur des projets intellectuels. Risque de détachement émotionnel excessif.",
+                 "1-6": "Partage d'un sens du devoir et de la responsabilité. Le 1 peut trouver le 6 trop anxieux, le 6 peut trouver le 1 trop critique ou rigide.",
+                 "1-7": "Contraste entre la discipline du 1 et la spontanéité du 7. Le 1 peut aider le 7 à se structurer, le 7 peut aider le 1 à se détendre. Risque fort de jugement (1->7) et de sentiment d'être limité (7->1).",
+                 "1-8": "Alliance de force et de principes. Peuvent être puissants ensemble pour une cause. Risque de lutte pour le contrôle et d'insensibilité mutuelle.",
+                 "1-9": "Le 1 apporte l'ordre, le 9 la paix. Peuvent se stabiliser. Le 1 peut reprocher au 9 son inaction, le 9 peut trouver le 1 trop exigeant.",
+                 "2-2": "Très centrés sur la relation et l'aide. Risque de négliger leurs propres besoins et de devenir co-dépendants.",
+                 "2-3": "Le 2 soutient le succès du 3, le 3 apprécie l'admiration du 2. Risque que la relation devienne superficielle ou basée sur l'image.",
+                 "2-4": "Forte connexion émotionnelle possible. Le 2 apporte le soutien, le 4 la profondeur. Risque de montagnes russes émotionnelles et de dépendance affective.",
+                 "2-5": "Le 2 tente de 'réchauffer' le 5, le 5 peut se sentir envahi. Le 5 apporte l'objectivité, le 2 la connexion. Nécessite beaucoup de respect des limites.",
+                 "2-6": "Le 2 rassure le 6 anxieux, le 6 apprécie la loyauté du 2. Risque de dépendance mutuelle et de difficulté à gérer les conflits ouverts.",
+                 "2-7": "Le 2 est attiré par la joie du 7, le 7 par la générosité du 2. Le 2 peut se sentir négligé, le 7 peut se sentir étouffé par les attentes.",
+                 "2-8": "Le 2 admire la force du 8, le 8 apprécie le soutien du 2. Dynamique protectrice. Risque de contrôle (8) et de manipulation affective (2).",
+                 "2-9": "Relation douce et attentionnée. Le 2 prend soin, le 9 maintient l'harmonie. Risque d'évitement des problèmes et de manque d'affirmation.",
+                 "3-3": "Très axés sur l'image et le succès. Peuvent être un 'power couple'. Risque de compétition et de manque d'authenticité émotionnelle.",
+                 "3-4": "Le 3 est orienté action/image, le 4 authenticité/émotion. Le 4 peut trouver le 3 superficiel, le 3 peut trouver le 4 trop lunatique. Attraction possible mais défi d'intégration.",
+                 "3-5": "Focalisation sur la compétence et l'efficacité. Le 3 exécute, le 5 analyse. Peuvent bien travailler ensemble. Risque de négliger la connexion humaine.",
+                 "3-6": "Le 3 apporte la confiance, le 6 la prudence. Peuvent s'équilibrer si le 3 ne méprise pas les doutes du 6 et si le 6 ne freine pas trop le 3.",
+                 "3-7": "Très énergique, orienté vers l'action, les projets et les nouvelles expériences. Le 3 apporte l'objectif, le 7 l'enthousiasme. S'encouragent mutuellement. Risque d'éviter les problèmes de fond, la profondeur émotionnelle ou l'engagement durable.",
+                 "3-8": "Combinaison d'ambition (3) et de puissance (8). Très forts pour atteindre des objectifs concrets. Risque de conflit d'ego et de lutte pour le leadership.",
+                 "3-9": "Le 3 est actif, le 9 est réceptif. Le 9 admire l'énergie du 3, le 3 apprécie le calme du 9. Le 3 peut pousser le 9, mais risque de le surmener ou de ne pas le voir.",
+                 "4-4": "Profonde connexion émotionnelle et compréhension mutuelle unique. Risque de se perdre dans la mélancolie, le drame ou l'isolement à deux.",
+                 "4-5": "Monde intérieur riche (4) rencontre monde intellectuel riche (5). Peuvent s'apprécier mutuellement. Le 4 peut désirer plus d'expression émotionnelle, le 5 plus d'espace.",
+                 "4-6": "Le 4 apporte la profondeur émotionnelle, le 6 la loyauté et l'engagement. Le 4 peut trouver le 6 trop conventionnel/anxieux, le 6 peut trouver le 4 trop instable.",
+                 "4-7": "Le 4 cherche la profondeur, le 7 la nouveauté/le plaisir. Peuvent s'inspirer mutuellement (créativité/joie). Risque que le 7 fuie l'intensité du 4, et que le 4 trouve le 7 superficiel.",
+                 "4-8": "Le 4 apprécie l'authenticité et la force du 8, le 8 peut être intrigué par la profondeur du 4. Risque de confrontations intenses dues à leur nature passionnée.",
+                 "4-9": "Le 4 cherche l'intensité et l'unicité, le 9 recherche la paix et l'harmonie. Le 9 peut apaiser le 4, le 4 peut aider le 9 à se connecter à ses passions. Risque que le 4 trouve le 9 trop passif et que le 9 trouve le 4 trop dramatique ou exigeant.",
+                 "5-5": "Beaucoup d'espace personnel, compréhension mutuelle du besoin de retrait et d'analyse. Risque d'isolement excessif et de négligence de la vie pratique ou émotionnelle.",
+                 "5-6": "Le 5 apporte l'analyse, le 6 la planification des risques. Peuvent former une équipe prudente et compétente. Le 5 peut trouver le 6 trop anxieux, le 6 peut trouver le 5 trop détaché.",
+                 "5-7": "Combinaison d'exploration mentale (5) et d'exploration expérientielle (7). Stimulant intellectuellement. Risque que le 7 trouve le 5 trop retiré et que le 5 trouve le 7 trop dispersé.",
+                 "5-8": "Alliance de la stratégie (5) et de la puissance (8). Peuvent être très efficaces ensemble pour des objectifs clairs. Risque de lutte de pouvoir intellectuel vs action, ou de manque de chaleur.",
+                 "5-9": "Le 5 respecte l'autonomie du 9, le 9 apprécie le calme du 5. Relation peu exigeante. Risque de passivité et de manque d'engagement mutuel.",
+                 "6-6": "Partage d'une recherche de sécurité et de loyauté. Grande compréhension mutuelle des angoisses. Risque de rester bloqués dans l'indécision ou la méfiance.",
+                 "6-7": "Le 6 apporte la prudence, le 7 l'optimisme. Peuvent s'équilibrer. Le 6 peut s'inquiéter de l'impulsivité du 7, le 7 peut se sentir freiné par l'anxiété du 6.",
+                 "6-8": "Le 6 cherche un protecteur (8), le 8 aime protéger (6). Relation basée sur la force et la loyauté. Risque que le 8 devienne trop dominant et le 6 trop dépendant.",
+                 "6-9": "Recherche commune de sécurité (6) et de confort (9). Peuvent créer un environnement stable et prévisible. Risque d'inertie, de procrastination et d'évitement des conflits nécessaires.",
+                 "7-7": "Beaucoup d'énergie, d'optimisme et de recherche de plaisir. Très amusant au début. Risque d'éviter les responsabilités, les émotions difficiles et l'engagement profond.",
+                 "7-8": "Combinaison d'énergie et d'assertivité. Très actifs et entreprenants. Risque de confrontations explosives et de difficulté à ralentir.",
+                 "7-9": "Le 7 apporte l'énergie et l'optimisme, le 9 la paix et l'acceptation. Le 9 peut stabiliser le 7, le 7 peut dynamiser le 9. Risque que le 7 s'ennuie et que le 9 se sente dépassé.",
+                 "8-8": "Relation intense, passionnée et directe. Respect mutuel de la force. Risque de luttes de pouvoir constantes et de manque de vulnérabilité.",
+                 "8-9": "Le 8 prend les devants, le 9 suit et apaise. Le 8 apprécie le calme du 9, le 9 la force protectrice du 8. Risque que le 8 domine excessivement et que le 9 perde sa voix.",
+                 "9-9": "Relation très paisible, confortable et harmonieuse. Compréhension mutuelle du besoin de tranquillité. Risque majeur d'inertie, de non-dits et de négligence des problèmes."
             };
 
              // ---=== APPLICATION STATE ===---
@@ -620,8 +677,8 @@
                 // Simple back logic, goes to previous view unless it was test
                  if (previousView && previousView !== 'test' && previousView !== currentView) {
                     showView(previousView);
-                } else if (userResult) {
-                     showView('results'); // Go to results if test was completed
+                } else if (userResult && currentView !== 'results') { // Go to results if test was completed and we are not already there
+                     showView('results');
                  }
                 else {
                     showView('home'); // Default fallback
@@ -636,6 +693,7 @@
                 scores = {};
                 userResult = null; // Clear previous result
                 localStorage.removeItem('enneagramResult'); // Clear saved result on new test
+                savedResultInfo.style.display = 'none'; // Hide saved result info
                 totalQNumberSpan.textContent = questions.length;
                 displayCurrentQuestions();
                 updateProgress();
@@ -692,29 +750,39 @@
 
 
              function saveCurrentPageAnswers() {
-                 // This is now handled by handleAnswerChange in real-time
-                 // This function could be used for validation if needed before proceeding
+                 // Validation logic can be added here if needed before next/prev
                  const start = currentQuestionIndex;
                  const end = Math.min(start + questionsPerPage, questions.length);
-                 let allAnswered = true;
                  for (let i = start; i < end; i++) {
                      const qId = questions[i].id;
-                     if (!userAnswers[qId]) {
-                         allAnswered = false;
+                     const radioSelected = questionContainer.querySelector(`input[name="q${qId}"]:checked`);
+                     if (radioSelected) {
+                         userAnswers[qId] = parseInt(radioSelected.value);
+                     } else {
+                          // Optionally handle unanswered questions on the current page
+                         // console.warn(`Question ${qId} on current page not answered`);
+                     }
+                 }
+                 // Simple validation: check if all questions on *this* page are answered
+                 let allAnsweredOnPage = true;
+                 for (let i = start; i < end; i++) {
+                     if (!userAnswers[questions[i].id]) {
+                         allAnsweredOnPage = false;
                          break;
                      }
                  }
-                 if (!allAnswered) {
-                     alert("Veuillez répondre à toutes les questions sur cette page.");
-                     return false; // Indicate failure
-                 }
-                 return true; // Indicate success
+                 return allAnsweredOnPage; // Return true if all answered, false otherwise
              }
 
 
              function nextQuestions() {
-                 // Optional: Add validation before proceeding
-                 // if (!saveCurrentPageAnswers()) return;
+                 // Optional Strict Validation: Check if all on *current* page are answered
+                 // if (!saveCurrentPageAnswers()) {
+                 //     alert("Veuillez répondre à toutes les questions sur cette page avant de continuer.");
+                 //     return;
+                 // }
+                 // Less strict: just saves whatever is answered and proceeds
+                 saveCurrentPageAnswers(); // Ensure current answers are saved
 
                  currentQuestionIndex += questionsPerPage;
                 if (currentQuestionIndex >= questions.length) {
@@ -727,8 +795,7 @@
             }
 
             function previousQuestions() {
-                // Optional: Add validation or save state if needed
-                 // saveCurrentPageAnswers(); // Save answers even when going back
+                saveCurrentPageAnswers(); // Save answers even when going back
 
                 currentQuestionIndex -= questionsPerPage;
                 if (currentQuestionIndex < 0) {
@@ -754,38 +821,55 @@
             }
 
             function calculateResults() {
+                // Ensure final page answers are saved
+                if (!saveCurrentPageAnswers()) {
+                     alert("Veuillez répondre à toutes les questions de la dernière page.");
+                     return; // Stop calculation if last page isn't complete
+                 }
+
                 scores = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0 };
                 let answeredQuestionsCount = 0;
 
                 for (const q of questions) {
-                    if (userAnswers[q.id]) {
+                    if (userAnswers[q.id] !== undefined && userAnswers[q.id] !== null) { // Check if answer exists
                          scores[q.type] += userAnswers[q.id];
                         answeredQuestionsCount++;
                      } else {
-                         // Handle unanswered questions? Assume 0 or neutral (3)?
-                         // For simplicity, we'll skip them, but a real test might require all answers.
-                        console.warn(`Question ${q.id} not answered.`);
+                        console.warn(`Question ${q.id} non répondue - non incluse dans le score.`);
                      }
                 }
 
-                 // Check if enough questions were answered
-                if (answeredQuestionsCount < questions.length * 0.8) { // Example threshold: 80%
-                    alert("Vous n'avez pas répondu à suffisamment de questions pour un résultat fiable. Veuillez recommencer le test.");
-                     showView('home');
-                    return;
+                 // Check if enough questions were answered overall
+                 // Example threshold: must answer at least 1 question per type on average? Or 80% total?
+                if (answeredQuestionsCount < questions.length * 0.8) {
+                    alert("Vous n'avez pas répondu à suffisamment de questions pour un résultat fiable. Veuillez répondre à plus de questions et terminer.");
+                     // Maybe go back to the first unanswered question page? Or just stay here.
+                    return; // Stop before displaying potentially misleading results
                 }
 
 
                 // Find main type (highest score)
                  let mainType = -1;
                  let maxScore = -1;
+                 let tiedTypes = []; // To handle ties
+
                  for (const type in scores) {
                      if (scores[type] > maxScore) {
                          maxScore = scores[type];
                          mainType = parseInt(type);
+                         tiedTypes = [mainType]; // Reset ties, new highest
+                     } else if (scores[type] === maxScore) {
+                         tiedTypes.push(parseInt(type)); // Add to ties
                      }
-                     // Handle ties? For now, first highest wins. Could list all tied types.
                  }
+
+                 // If tied, maybe indicate it? For now, keep the first one found as mainType.
+                 if (tiedTypes.length > 1) {
+                     console.log("Égalité pour le score maximum entre les types :", tiedTypes);
+                     // Simple approach: keep the first one `mainType` determined above.
+                     // Alternative: list all tied types as potential main types.
+                 }
+
 
                  // Determine wings
                 let wings = [];
@@ -795,22 +879,28 @@
                     const wing1Score = scores[wing1Type] || 0;
                     const wing2Score = scores[wing2Type] || 0;
 
-                    // Simple wing logic: Add if score is relatively high (e.g., > 60% of main type score)
-                     // Or just show the adjacent types and their scores
-                     // Let's identify the strongest wing
-                     if (wing1Score > wing2Score && wing1Score > maxScore * 0.5) { // Example threshold
+                    // More nuanced wing logic: Check adjacent scores relative to maxScore
+                    const wingThreshold = maxScore * 0.65; // Wing score should be at least 65% of main score (example)
+
+                    if (wing1Score >= wingThreshold && wing1Score > wing2Score) {
                          wings.push(wing1Type);
-                     } else if (wing2Score > wing1Score && wing2Score > maxScore * 0.5) {
+                    } else if (wing2Score >= wingThreshold && wing2Score > wing1Score) {
                          wings.push(wing2Type);
-                     } else if (wing1Score === wing2Score && wing1Score > maxScore * 0.5) {
-                         // Both wings are equally strong
-                         wings.push(wing1Type);
-                         wings.push(wing2Type);
+                    } else if (wing1Score >= wingThreshold && wing2Score >= wingThreshold) {
+                        // If both are strong enough, mention both or the stronger one? Let's list both if close.
+                        if (Math.abs(wing1Score - wing2Score) <= 2) { // If scores are very close (e.g., difference <= 2 points)
+                            wings.push(wing1Type);
+                            wings.push(wing2Type);
+                        } else if (wing1Score > wing2Score) { // Otherwise, take the stronger one if threshold met
+                             wings.push(wing1Type);
+                         } else {
+                             wings.push(wing2Type);
+                         }
                      }
-                     // Alternative: Always show both potential wings scores
+                     // If no wing meets threshold, wings array remains empty.
                 }
 
-                 userResult = { mainType, wings, scores };
+                 userResult = { mainType, wings, scores, tiedTypes }; // Include tiedTypes info
                  saveToLocalStorage();
                  displayResults();
             }
@@ -821,7 +911,7 @@
                         localStorage.setItem('enneagramResult', JSON.stringify(userResult));
                     } catch (e) {
                         console.error("Failed to save to localStorage", e);
-                        // Inform user maybe?
+                        alert("Impossible de sauvegarder les résultats dans le stockage local. Votre navigateur est peut-être en mode privé ou le stockage est plein.");
                     }
                  }
              }
@@ -831,10 +921,17 @@
                      const savedResult = localStorage.getItem('enneagramResult');
                      if (savedResult) {
                          userResult = JSON.parse(savedResult);
-                         return true;
+                         // Basic validation of loaded data
+                         if (userResult && userResult.mainType && userResult.scores) {
+                             return true;
+                         } else {
+                             console.error("Données sauvegardées invalides.");
+                             localStorage.removeItem('enneagramResult');
+                             return false;
+                         }
                      }
                  } catch (e) {
-                    console.error("Failed to load from localStorage", e);
+                    console.error("Failed to load or parse from localStorage", e);
                     localStorage.removeItem('enneagramResult'); // Clear corrupted data
                 }
                  return false;
@@ -842,59 +939,87 @@
 
 
             // --- Results Functions ---
+            // === MODIFICATION/AJOUT : Correction de l'affichage du graphique ===
              function displayResults() {
-                 if (!userResult) return; // Should not happen if called correctly
+                 if (!userResult) return;
 
-                 const { mainType, wings, scores } = userResult;
+                 const { mainType, wings, scores, tiedTypes } = userResult; // Destructure including tiedTypes
 
                  if (mainType !== -1) {
-                     mainTypeNameSpan.textContent = enneagramData[mainType].name;
+                     let mainTypeDisplay = `${enneagramData[mainType].name} (${mainType})`;
+                     if (tiedTypes && tiedTypes.length > 1 && tiedTypes.includes(mainType)) {
+                         const otherTied = tiedTypes.filter(t => t !== mainType);
+                         mainTypeDisplay += ` (Égalité possible avec type(s) ${otherTied.join(', ')})`;
+                     }
+                     mainTypeNameSpan.innerHTML = enneagramData[mainType].name; // Use innerHTML if needed later
                      mainTypeNumberSpan.textContent = mainType;
                      mainTypeNameSpan.className = `type-color-${mainType}`; // Add color class
 
                      let wingsText = "Aile(s) potentielle(s) : ";
                      if (wings.length > 0) {
-                         wingsText += wings.map(w => `${w} (${enneagramData[w].name})`).join(', ');
+                         wingsText += wings.map(w => `${w} (${enneagramData[w].name})`).join(' et ');
                      } else {
-                        // Determine adjacent types even if not strong wings
+                        // Suggest considering adjacent types even if not strong wings
                         const wing1Type = mainType === 1 ? 9 : mainType - 1;
                         const wing2Type = mainType === 9 ? 1 : mainType + 1;
-                        wingsText += `Considérez les influences des types ${wing1Type} et ${wing2Type}.`;
+                        wingsText = `Considérez les influences des types adjacents ${wing1Type} et ${wing2Type}. (Ailes non marquées)`;
                     }
                      wingsInfoP.textContent = wingsText;
+
+                     // Update the main title h2 to include tie info
+                     const resultTitleH2 = document.querySelector('#results-summary h2');
+                     if(resultTitleH2) resultTitleH2.innerHTML = `Votre type principal probable : <span id="main-type-name" class="type-color-${mainType}">${enneagramData[mainType].name}</span> (<span id="main-type-number">${mainType}</span>)${tiedTypes && tiedTypes.length > 1 ? ` <small>(Égalité possible avec ${tiedTypes.filter(t=>t!==mainType).join(', ')})</small>` : ''}`;
+
 
                      viewDetailsBtn.onclick = () => displayTypeDetails(mainType);
                      viewDetailsBtn.disabled = false;
                  } else {
+                     // Handle case where no main type could be determined (e.g., insufficient answers)
                      mainTypeNameSpan.textContent = "Indéterminé";
                      mainTypeNumberSpan.textContent = "?";
-                     wingsInfoP.textContent = "Impossible de déterminer le type principal. Essayez de refaire le test.";
+                     wingsInfoP.textContent = "Impossible de déterminer le type principal. Veuillez répondre à plus de questions.";
                      viewDetailsBtn.disabled = true;
+                     const resultTitleH2 = document.querySelector('#results-summary h2');
+                      if(resultTitleH2) resultTitleH2.innerHTML = `Votre type principal probable : <span id="main-type-name">Indéterminé</span> (<span id="main-type-number">?</span>)`;
+
                  }
 
                  // Display Chart
                  resultsChartDiv.innerHTML = ''; // Clear previous chart
                  let maxScoreValue = 0;
                  for (const type in scores) {
-                     if (scores[type] > maxScoreValue) {
-                         maxScoreValue = scores[type];
-                     }
+                      const numericScore = Number(scores[type] || 0);
+                      if (!isNaN(numericScore) && numericScore > maxScoreValue) {
+                          maxScoreValue = numericScore;
+                      }
                  }
-                 // Avoid division by zero if all scores are 0
-                 if (maxScoreValue === 0) maxScoreValue = 1;
+                  // Ensure maxScoreValue is at least 1 to avoid division by zero or negative heights
+                 if (maxScoreValue <= 0) maxScoreValue = 1; // Prevents issues if all scores are 0 or negative (unlikely)
+
 
                  for (let i = 1; i <= 9; i++) {
                      const score = scores[i] || 0;
-                     const barHeight = (score / maxScoreValue) * 100; // Percentage height
+                     const numericScore = Number(score);
+                     if (isNaN(numericScore)) {
+                         console.error(`Score invalide pour le graphique du type ${i}:`, score);
+                         continue; // Skip bar if score is not a valid number
+                     }
+
+                     // Calculate height, ensure it's non-negative and max 100%
+                     const barHeight = Math.max(0, Math.min(100, (numericScore / maxScoreValue) * 100));
+
+                     // console.log(`Barre ${i}: Score=${numericScore}, Hauteur=${barHeight}%`); // DEBUG
+
                      const barContainer = document.createElement('div');
                      barContainer.classList.add('chart-bar-container');
 
                      const bar = document.createElement('div');
                      bar.classList.add('chart-bar');
-                     // Add type-specific background color using class
-                     bar.classList.add(`type-bg-${i}`);
-                     bar.style.height = `${barHeight}%`;
-                     bar.setAttribute('data-score', score); // For tooltip
+                     // ---=== AJOUT/CORRECTION ESSENTIELLE ===---
+                     bar.classList.add(`type-bg-${i}`); // Apply type-specific background color class
+                     bar.style.height = `${barHeight}%`; // Apply calculated height
+                     bar.setAttribute('data-score', numericScore); // Set score for tooltip
+                     // ---=== FIN AJOUT/CORRECTION ===---
 
                      const label = document.createElement('div');
                      label.classList.add('chart-label');
@@ -908,6 +1033,8 @@
 
                  showView('results');
             }
+             // === FIN MODIFICATION/AJOUT ===
+
 
              function resetTestAndShowHome() {
                  userResult = null;
@@ -925,7 +1052,7 @@
                 for (let i = 1; i <= 9; i++) {
                     const type = enneagramData[i];
                     const button = document.createElement('button');
-                    button.textContent = `${i}`; // Show number, maybe add icon later
+                    button.innerHTML = `${type.icon || i}`; // Use icon if available, else number
                     button.title = type.name; // Tooltip with name
                     button.classList.add('type-button', 'outline', `type-color-${i}`); // Add base and color classes
                     button.onclick = () => displayTypeDetails(i);
@@ -937,6 +1064,7 @@
                 const type = enneagramData[typeNumber];
                 if (!type) return;
 
+                 // Use H4 for sub-sections now
                 typeDetailContentDiv.innerHTML = `
                     <h3>${type.icon} ${type.name} (Type ${typeNumber})</h3>
                     <div class="type-detail-section">
@@ -956,8 +1084,9 @@
                         <p><strong>Motivation:</strong> ${type.motivation}<br><strong>Peur:</strong> ${type.fear}</p>
                     </div>
                     <div class="type-detail-section">
-                        <h4>Comportements</h4>
-                        <p><strong>Sous Stress:</strong> ${type.stress}<br><strong>En Sécurité:</strong> ${type.security}</p>
+                        <h4>Comportements (Stress/Sécurité)</h4>
+                        <p><strong>Sous Stress (Désintégration) <i title="Tendance vers les aspects moins sains de ce type">➔</i> ${type.stress.match(/\d+/)?.[0] || ''} :</strong> ${type.stress}</p>
+                        <p><strong>En Sécurité (Intégration) <i title="Tendance vers les aspects plus sains de ce type">➔</i> ${type.security.match(/\d+/)?.[0] || ''} :</strong> ${type.security}</p>
                     </div>
                      <div class="type-detail-section">
                         <h4>Chemins de Croissance Personnelle</h4>
@@ -965,22 +1094,26 @@
                     </div>
                      <div class="type-detail-section">
                         <h4>Conseils Pratiques</h4>
-                        <p>${type.tips || "Conseils à venir."}</p>
+                        <p>${type.tips || "Conseils spécifiques à venir."}</p>
                     </div>
                 `;
-                 // Apply color to the title or container background?
+                 // Apply color to the main title
                  const titleH3 = typeDetailContentDiv.querySelector('h3');
-                 if(titleH3) titleH3.className = `type-color-${typeNumber}`;
+                 if(titleH3) {
+                     titleH3.className = ''; // Clear previous classes
+                     titleH3.classList.add(`type-color-${typeNumber}`); // Add the correct color class
+                 }
+
 
                 typeDetailContentDiv.style.display = 'block';
 
                  // If not already in types view, switch to it
                  if (currentView !== 'types') {
                     showView('types');
-                }
-
-                 // Scroll to the details section
-                 typeDetailContentDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                 } else {
+                      // If already in types view, just scroll to the details
+                      typeDetailContentDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                 }
             }
 
 
@@ -1010,18 +1143,24 @@
                      return;
                  }
                  if (type1 === type2) {
-                    comparisonResultDiv.innerHTML = "<p>Comparer un type avec lui-même ?<br> Dynamique : Partage des mêmes motivations et peurs fondamentales. Peut conduire à une grande compréhension ou à l'amplification des défis du type.</p>";
+                    // Use the specific text for same-type comparison if available
+                    const key = `${type1}-${type1}`;
+                    const dynamic = relationshipMatrix[key] || "Comparer un type avec lui-même ? Dynamique : Partage des mêmes motivations et peurs fondamentales. Peut conduire à une grande compréhension ou à l'amplification des défis du type.";
+                    comparisonResultDiv.innerHTML = `<h4>Dynamique Type ${type1} et Type ${type1}</h4><p>${dynamic}</p><p><em>Note : Aperçu simplifié.</em></p>`;
                     return;
                  }
 
                  // Ensure consistent key order (e.g., "1-7" not "7-1")
-                 const key = `${Math.min(type1, type2)}-${Math.max(type1, type2)}`;
-                 const dynamic = relationshipMatrix[key];
+                 const typeNum1 = parseInt(type1);
+                 const typeNum2 = parseInt(type2);
+                 const key = `${Math.min(typeNum1, typeNum2)}-${Math.max(typeNum1, typeNum2)}`;
+                 const dynamic = relationshipMatrix[key]; // Use the enriched matrix
 
                  if (dynamic) {
-                    comparisonResultDiv.innerHTML = `<h4>Dynamique Type ${type1} et Type ${type2}</h4><p>${dynamic}</p><p><em>Note : Ceci est une description très simplifiée. Les relations réelles sont complexes.</em></p>`;
+                    comparisonResultDiv.innerHTML = `<h4>Dynamique Type ${type1} (${enneagramData[type1].name}) et Type ${type2} (${enneagramData[type2].name})</h4><p>${dynamic}</p><p><em>Note : Ceci est un aperçu simplifié. Les relations réelles sont complexes et dépendent des individus, de leur niveau de conscience et de leur volonté de croissance.</em></p>`;
                 } else {
-                    comparisonResultDiv.innerHTML = `<p>La dynamique spécifique entre le Type ${type1} et le Type ${type2} n'est pas détaillée ici. En général, tous les types peuvent avoir des relations positives en développant la conscience de soi et l'empathie.</p>`;
+                    // This fallback should be less frequent now
+                    comparisonResultDiv.innerHTML = `<p>La dynamique spécifique entre le Type ${type1} et le Type ${type2} n'est pas encore détaillée ici. En général, tous les types peuvent avoir des relations positives en développant la conscience de soi et l'empathie mutuelle.</p>`;
                  }
              }
 
@@ -1030,7 +1169,7 @@
                  // Check for saved result
                  if (loadFromLocalStorage()) {
                      savedResultInfo.style.display = 'block';
-                     showSavedResultBtn.onclick = () => displayResults();
+                     showSavedResultBtn.onclick = () => displayResults(); // Directly call displayResults
                  } else {
                      savedResultInfo.style.display = 'none';
                  }
@@ -1050,12 +1189,12 @@
 
                  prevBtn.addEventListener('click', previousQuestions);
                  nextBtn.addEventListener('click', nextQuestions);
-                 finishBtn.addEventListener('click', calculateResults); // Changed from nextQuestions
+                 finishBtn.addEventListener('click', calculateResults);
 
                  compareBtn.addEventListener('click', compareTypes);
 
-                 // Initial View (already set to 'home' by default)
-                 showView('home');
+                 // Initial View (already set to 'home' by default in HTML)
+                 // showView('home'); // No need to call it again, handled by class="active"
             }
 
             // ---=== START THE APP ===---
