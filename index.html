@@ -93,10 +93,67 @@
         .type-bg-1 { background-color: var(--type1-color); } .type-bg-2 { background-color: var(--type2-color); } .type-bg-3 { background-color: var(--type3-color); } .type-bg-4 { background-color: var(--type4-color); } .type-bg-5 { background-color: var(--type5-color); } .type-bg-6 { background-color: var(--type6-color); } .type-bg-7 { background-color: var(--type7-color); } .type-bg-8 { background-color: var(--type8-color); } .type-bg-9 { background-color: var(--type9-color); }
         .type-border-1::before { background-color: var(--type1-color); } .type-border-2::before { background-color: var(--type2-color); } .type-border-3::before { background-color: var(--type3-color); } .type-border-4::before { background-color: var(--type4-color); } .type-border-5::before { background-color: var(--type5-color); } .type-border-6::before { background-color: var(--type6-color); } .type-border-7::before { background-color: var(--type7-color); } .type-border-8::before { background-color: var(--type8-color); } .type-border-9::before { background-color: var(--type9-color); }
         .type-text-1 { color: var(--type1-color); } .type-text-2 { color: var(--type2-color); } .type-text-3 { color: var(--type3-color); } .type-text-4 { color: var(--type4-color); } .type-text-5 { color: var(--type5-color); } .type-text-6 { color: var(--type6-color); } .type-text-7 { color: var(--type7-color); } .type-text-8 { color: var(--type8-color); } .type-text-9 { color: var(--type9-color); }
+        
+        /* NOUVEAU STYLE POUR LA BANNIÈRE DE PROMOTION */
+        .promo-banner {
+            background-color: var(--secondary-color); /* Orange vif */
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: 600;
+            border-radius: 8px;
+            margin-bottom: 25px; /* Espace sous la bannière */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            animation: pulse 2s infinite ease-in-out; /* Animation subtile */
+            border: 2px solid var(--primary-color); /* Bordure pour contraste */
+        }
+        .promo-banner a {
+            color: white;
+            text-decoration: underline;
+            font-weight: 700;
+            transition: color 0.3s ease;
+        }
+        .promo-banner a:hover {
+            color: var(--primary-color); /* Changement de couleur au survol */
+            text-decoration: none;
+        }
+
+        /* Animation Keyframes */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.01); }
+            100% { transform: scale(1); }
+        }
+
+        @media (max-width: 768px) {
+            .promo-banner {
+                font-size: 1em;
+                padding: 12px 15px;
+                margin-bottom: 20px;
+            }
+        }
+        @media (max-width: 480px) {
+            .promo-banner {
+                font-size: 0.9em;
+                padding: 10px 10px;
+                margin-bottom: 15px;
+            }
+        }    
+    
+    
+    
     </style>
 </head>
 <body>
     <div id="app">
+
+        <div class="promo-banner">
+            Découvrez "Le Chemin de la Conscience : Une Collection sur l'Ennéagramme (9 livres)" !
+            <a href="https://www.amazon.fr/dp/B0FRMN612N" target="_blank" rel="noopener noreferrer">
+                Cliquez ici pour explorer la série sur Amazon.
+            </a>
+        </div>
         <!-- ==== HOME VIEW ==== -->
         <section id="home" class="view active">
             <h1>Bienvenue sur l'Explorateur d'Ennéagramme</h1>
